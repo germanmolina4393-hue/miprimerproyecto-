@@ -1,0 +1,35 @@
+import { useEffect, useRef } from 'react'
+import { gsap } from 'gsap'
+
+interface Props {
+  onComplete: () => void
+}
+
+export default function IntroOverlay({ onComplete }: Props) {
+  const leftRef = useRef<HTMLDivElement>(null)
+  const rightRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const tl = gsap.timeline()
+    tl.from(textRef.current, { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' })
+      .to(textRef.current, { opacity: 0, duration: 0.4, delay: 0.8 })
+      .to(leftRef.current, { x: '-100%', duration: 0.7, ease: 'power3.inOut' }, '<')
+      .to(rightRef.current, { x: '100%', duration: 0.7, ease: 'power3.inOut' }, '<')
+      .call(onComplete)
+
+    return () => { tl.kill() }
+  }, [onComplete])
+
+  return (
+    <div className="fixed inset-0 z-[100] flex pointer-events-none">
+      <div ref={leftRef} className="w-1/2 h-full bg-charcoal" />
+      <div ref={rightRef} className="w-1/2 h-full bg-charcoal" />
+      <div ref={textRef} className="absolute inset-0 flex items-center justify-center">
+        <h1 className="font-serif text-4xl md:text-6xl text-parchment living-gradient text-center px-4">
+          Mundo de Colores
+        </h1>
+      </div>
+    </div>
+  )
+}
