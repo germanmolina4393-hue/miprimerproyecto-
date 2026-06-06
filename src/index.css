@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: #C9A84C #FAF5EF;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #FAF5EF; }
+  ::-webkit-scrollbar-thumb { background: #C9A84C; border-radius: 3px; }
+
+  body {
+    margin: 0;
+    background-color: #FAF5EF;
+    color: #1C1C1C;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@layer components {
+  .living-gradient {
+    background: linear-gradient(270deg, #C9A84C, #E07A5F, #81B29A, #7FB5C1, #C9A84C);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 6s ease infinite;
+  }
+
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%       { background-position: 100% 50%; }
+  }
+
+  .card-image-zoom img {
+    transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .card-image-zoom:hover img {
+    transform: scale(1.1);
+  }
+
+  .card-overlay {
+    position: relative;
+  }
+  .card-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.15), rgba(224,122,95,0.25));
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+    border-radius: inherit;
+  }
+  .card-overlay:hover::after {
+    opacity: 1;
+  }
+}
