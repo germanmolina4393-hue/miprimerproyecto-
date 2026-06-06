@@ -61,17 +61,16 @@ export default function PreviewModal({ title, image, price, paymentLink, onClose
 
           {/* Badge PDF */}
           <span className="absolute top-4 left-4 flex items-center gap-1.5 bg-coral text-white text-sm font-semibold px-3 py-1.5 rounded-full">
-            <Printer size={14} /> Vista previa
+            <Printer size={14} /> Imagen referencial
           </span>
         </div>
 
         {/* Info */}
         <div className="p-6">
           <h2 className="font-serif text-2xl font-bold text-charcoal mb-2">{title}</h2>
-          <p className="text-charcoal/50 text-sm mb-4 leading-relaxed">
-            Diseño original listo para imprimir en hoja A4. Alta resolución, líneas limpias.
-            Ideal para colorear con lápices, marcadores o acuarelas.
-          </p>
+          <div className="bg-gold/10 border border-gold/20 rounded-xl p-3 mb-4 text-sm text-charcoal/70 leading-relaxed">
+            📄 <strong>¿Qué vas a recibir?</strong> Un PDF en blanco y negro con el diseño de <em>{title}</em>, listo para imprimir en hoja A4 y colorear con lápices, fibras o acuarelas. La imagen de arriba es una referencia del tema.
+          </div>
 
           <ul className="flex flex-wrap gap-2 mb-6">
             {['PDF A4', 'Alta resolución', 'Descarga instantánea', 'Para imprimir'].map(f => (
