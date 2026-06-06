@@ -5,17 +5,17 @@ import CategoryCard from '../components/CategoryCard'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const CATEGORIES = [
-  { title: 'Animales', badge: 'Popular', image: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=400&h=300&fit=crop', count: 24 },
-  { title: 'Mandalas', badge: 'Relajación', image: 'https://images.unsplash.com/photo-1585503418537-88331351ad99?w=400&h=300&fit=crop', count: 18 },
-  { title: 'Naturaleza', badge: 'Nuevo', image: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop', count: 15 },
-  { title: 'Princesas', badge: 'Infantil', image: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=400&h=300&fit=crop', count: 20 },
-  { title: 'Superhéroes', badge: 'Infantil', image: 'https://images.unsplash.com/photo-1612036782180-6f0b6cd846fe?w=400&h=300&fit=crop', count: 16 },
-  { title: 'Flores', badge: 'Adultos', image: 'https://images.unsplash.com/photo-1490750967868-88df5691cc47?w=400&h=300&fit=crop', count: 22 },
-  { title: 'Navidad', badge: 'Temporada', image: 'https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=400&h=300&fit=crop', count: 12 },
-  { title: 'Dinosaurios', badge: 'Infantil', image: 'https://images.unsplash.com/photo-1564760055775-d63b17a55c44?w=400&h=300&fit=crop', count: 14 },
-  { title: 'Arte abstracto', badge: 'Adultos', image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&h=300&fit=crop', count: 10 },
-  { title: 'Vehículos', badge: 'Infantil', image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop', count: 11 },
+export const CATEGORIES = [
+  { title: 'Animales', badge: 'Popular', image: 'https://images.unsplash.com/photo-1474511320723-9a56873867b5?w=600&h=400&fit=crop', count: 24, description: 'Leones, elefantes, mariposas y más. Perfectos para niños y adultos.' },
+  { title: 'Mandalas', badge: 'Relajación', image: 'https://images.unsplash.com/photo-1620503374956-c942862f0372?w=600&h=400&fit=crop', count: 18, description: 'Diseños circulares simétricos. Ideales para relajarse y concentrarse.' },
+  { title: 'Naturaleza', badge: 'Nuevo', image: 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?w=600&h=400&fit=crop', count: 15, description: 'Árboles, flores silvestres, paisajes y escenas del mundo natural.' },
+  { title: 'Princesas', badge: 'Infantil', image: 'https://images.unsplash.com/photo-1534126511673-b6899657816a?w=600&h=400&fit=crop', count: 20, description: 'Castillos, coronas y personajes de cuento para las más pequeñas.' },
+  { title: 'Superhéroes', badge: 'Infantil', image: 'https://images.unsplash.com/photo-1608889175638-9322300c46e8?w=600&h=400&fit=crop', count: 16, description: 'Personajes de acción y aventura para los más chicos de la casa.' },
+  { title: 'Flores', badge: 'Adultos', image: 'https://images.unsplash.com/photo-1490750967868-88df5691cc47?w=600&h=400&fit=crop', count: 22, description: 'Rosas, girasoles, tulipanes y composiciones florales detalladas.' },
+  { title: 'Navidad', badge: 'Temporada', image: 'https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=600&h=400&fit=crop', count: 12, description: 'Papá Noel, renos, árboles y motivos navideños para la familia.' },
+  { title: 'Dinosaurios', badge: 'Infantil', image: 'https://images.unsplash.com/photo-1519914401778-46e8e44cded8?w=600&h=400&fit=crop', count: 14, description: 'T-Rex, braquiosaurio y todas las especies favoritas de los chicos.' },
+  { title: 'Arte abstracto', badge: 'Adultos', image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=600&h=400&fit=crop', count: 10, description: 'Formas geométricas y patrones complejos para una experiencia meditativa.' },
+  { title: 'Vehículos', badge: 'Infantil', image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=600&h=400&fit=crop', count: 11, description: 'Autos, aviones, trenes y barcos. Favoritos de los más pequeños.' },
 ]
 
 export default function CategoriesSection() {
@@ -24,7 +24,6 @@ export default function CategoriesSection() {
   useEffect(() => {
     const cards = containerRef.current?.querySelectorAll('.category-card')
     if (!cards?.length) return
-
     gsap.fromTo(
       cards,
       { opacity: 0, y: 40 },
@@ -33,8 +32,6 @@ export default function CategoriesSection() {
         scrollTrigger: { trigger: containerRef.current, start: 'top 85%', toggleActions: 'play none none none' },
       }
     )
-
-    return () => { ScrollTrigger.getAll().forEach(t => t.kill()) }
   }, [])
 
   return (
@@ -45,10 +42,9 @@ export default function CategoriesSection() {
             Explorá nuestras <span className="living-gradient">categorías</span>
           </h2>
           <p className="text-charcoal/50 text-lg max-w-xl mx-auto">
-            Encontrá el diseño perfecto para cada momento y cada persona.
+            Hacé clic en cualquier categoría para ver los diseños disponibles.
           </p>
         </div>
-
         <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
           {CATEGORIES.map(cat => (
             <div key={cat.title} className="category-card">

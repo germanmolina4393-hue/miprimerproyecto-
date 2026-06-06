@@ -16,8 +16,8 @@ export default function StepCard({ number, icon, title, description }: Props) {
           {number}
         </span>
       </div>
-      <h3 className="font-serif text-xl font-semibold text-charcoal mb-2">{title}</h3>
-      <p className="text-charcoal/60 text-sm leading-relaxed">{description}</p>
+      <h3 className="font-serif text-xl font-semibold text-parchment mb-2">{title}</h3>
+      <p className="text-parchment/60 text-sm leading-relaxed">{description}</p>
     </div>
   )
 }
