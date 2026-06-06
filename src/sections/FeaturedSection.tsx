@@ -14,10 +14,10 @@ const PACK5_LINK = 'https://mpago.la/267Kc7C'
 
 const FEATURED = [
   { title: 'León majestuoso', image: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Mandala zen', image: 'https://images.unsplash.com/photo-1620503374956-c942862f0372?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Mandala zen', image: 'https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
   { title: 'Bosque encantado', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Princesa del castillo', image: 'https://images.unsplash.com/photo-1534126511673-b6899657816a?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Dino aventurero', image: 'https://images.unsplash.com/photo-1519914401778-46e8e44cded8?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Princesa del castillo', image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Dino aventurero', image: 'https://images.unsplash.com/photo-1615243029542-4fcced64c70e?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
   { title: 'Jardín de rosas', image: 'https://images.unsplash.com/photo-1490750967868-88df5691cc47?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
   { title: 'Galaxia colorida', image: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
   { title: 'Mariposa mágica', image: 'https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
