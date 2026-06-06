@@ -4,9 +4,10 @@ import { gsap } from 'gsap'
 interface Props {
   children: React.ReactNode
   className?: string
+  onClick?: () => void
 }
 
-export default function TiltCard({ children, className = '' }: Props) {
+export default function TiltCard({ children, className = '', onClick }: Props) {
   const cardRef = useRef<HTMLDivElement>(null)
 
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -37,6 +38,7 @@ export default function TiltCard({ children, className = '' }: Props) {
       ref={cardRef}
       onMouseMove={handleMove}
       onMouseLeave={handleLeave}
+      onClick={onClick}
       className={className}
       style={{ transformStyle: 'preserve-3d', willChange: 'transform' }}
     >
