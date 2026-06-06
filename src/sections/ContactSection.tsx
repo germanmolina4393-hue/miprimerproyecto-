@@ -21,7 +21,7 @@ export default function ContactSection() {
       //   2. Creá un formulario y copiá el ID
       //   3. Reemplazá XXXXXXXX por tu ID
       // =====================================================================
-      const res = await fetch('https://formspree.io/f/XXXXXXXX', {
+      const res = await fetch('https://formspree.io/f/xykakpav', {
         method: 'POST',
         body: data,
         headers: { Accept: 'application/json' },
