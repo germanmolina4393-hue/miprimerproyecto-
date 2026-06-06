@@ -9,17 +9,20 @@ gsap.registerPlugin(ScrollTrigger)
 // REEMPLAZÁ paymentLink de cada producto con tu link real de MercadoPago
 // Ejemplo: https://mpago.la/XXXXXXXXX
 // =====================================================================
+const INDIVIDUAL_LINK = 'https://mpago.la/18X3ruY'
+const PACK5_LINK = 'https://mpago.la/267Kc7C'
+
 const FEATURED = [
-  { title: 'León majestuoso', image: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&h=300&fit=crop', price: '299', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Mandala zen', image: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=400&h=300&fit=crop', price: '199', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Bosque encantado', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&h=300&fit=crop', price: '349', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Princesa del mar', image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop', price: '249', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Dino aventurero', image: 'https://images.unsplash.com/photo-1606921231106-f1083329a65c?w=400&h=300&fit=crop', price: '199', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Jardín de flores', image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop', price: '299', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Galaxia colorida', image: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&h=300&fit=crop', price: '349', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Superhéroe X', image: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400&h=300&fit=crop', price: '249', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Mariposa mágica', image: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&h=300&fit=crop', price: '199', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
-  { title: 'Pack Navidad (5 diseños)', image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400&h=300&fit=crop', price: '799', paymentLink: 'https://REEMPLAZAR-LINK-DE-PAGO.com' },
+  { title: 'León majestuoso', image: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Mandala zen', image: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Bosque encantado', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Princesa del mar', image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Dino aventurero', image: 'https://images.unsplash.com/photo-1606921231106-f1083329a65c?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Jardín de flores', image: 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Galaxia colorida', image: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Superhéroe X', image: 'https://images.unsplash.com/photo-1531259683007-016a7b628fc3?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Mariposa mágica', image: 'https://images.unsplash.com/photo-1548550023-2bdb3c5beed7?w=400&h=300&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
+  { title: 'Pack Navidad (5 diseños)', image: 'https://images.unsplash.com/photo-1549465220-1a8b9238cd48?w=400&h=300&fit=crop', price: '1.800', paymentLink: PACK5_LINK },
 ]
 
 export default function FeaturedSection() {
@@ -64,17 +67,10 @@ export default function FeaturedSection() {
           <h3 className="font-serif text-3xl font-bold text-charcoal mb-3">¿Querés todos los diseños?</h3>
           <p className="text-charcoal/50 mb-6">Accedé al pack completo y ahorrá más del 50%.</p>
           <a
-            href="https://REEMPLAZAR-LINK-DE-PAGO.com"
-            target="_blank"
-            rel="noopener"
+            href="#comprar"
             className="inline-block bg-charcoal text-parchment px-10 py-4 rounded-full font-semibold text-base hover:bg-gold transition-colors duration-300"
-            onClick={() => {
-              if (typeof window !== 'undefined' && (window as any).fbq) {
-                ;(window as any).fbq('track', 'InitiateCheckout', { content_name: 'Pack Completo' })
-              }
-            }}
           >
-            Ver Pack Completo
+            Ver todos los packs y precios ↓
           </a>
         </div>
       </div>
