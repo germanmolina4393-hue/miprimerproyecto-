@@ -58,8 +58,8 @@ export default function PricingSection() {
   }, [])
 
   const handleBuy = (plan: typeof PLANS[0]) => {
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      ;(window as any).fbq('track', 'InitiateCheckout', {
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'InitiateCheckout', {
         content_name: plan.name,
         value: parseInt(plan.price.replace('.', '')),
         currency: 'ARS',

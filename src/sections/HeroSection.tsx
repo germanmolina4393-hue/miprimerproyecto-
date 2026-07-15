@@ -26,8 +26,8 @@ export default function HeroSection({ show }: Props) {
   }, [show])
 
   const trackClick = () => {
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      ;(window as any).fbq('track', 'ViewContent')
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'ViewContent')
     }
   }
 
@@ -44,18 +44,18 @@ export default function HeroSection({ show }: Props) {
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
         <div ref={logoRef}>
           <span className="inline-block bg-gold/10 text-gold text-xs font-semibold px-4 py-1.5 rounded-full mb-6 tracking-wider uppercase">
-            ✦ Nuevo ✦ Disponible ahora
+            ✦ Colección Fundadora NGM-MDC-001 ✦
           </span>
         </div>
 
         <h1 ref={titleRef} className="font-serif text-5xl md:text-7xl font-bold text-charcoal leading-tight mb-6">
-          Páginas para colorear<br />
-          <span className="living-gradient">únicas e irrepetibles</span>
+          Aventuras para colorear,<br />
+          <span className="living-gradient">aprender y crear</span>
         </h1>
 
         <p ref={descRef} className="text-charcoal/60 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-          Diseños originales listos para imprimir. Para niños, adultos y toda la familia.
-          Descargá al instante y empezá a colorear hoy mismo.
+          Conocé Dinosaurios para Colorear: un libro infantil original con 28 páginas,
+          actividades educativas y diploma de Pequeño Paleontólogo.
         </p>
 
         <div ref={btnsRef} className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -64,7 +64,7 @@ export default function HeroSection({ show }: Props) {
             onClick={trackClick}
             className="inline-flex items-center gap-2 bg-charcoal text-parchment px-8 py-4 rounded-full font-semibold text-base hover:bg-gold transition-colors duration-300"
           >
-            Ver diseños <ArrowRight size={18} />
+            Ver el libro <ArrowRight size={18} />
           </a>
           <a
             href="#como-funciona"
@@ -75,7 +75,7 @@ export default function HeroSection({ show }: Props) {
         </div>
 
         <p className="mt-8 text-sm text-charcoal/40">
-          ✔ Descarga instantánea &nbsp;✔ PDF de alta calidad &nbsp;✔ Pago seguro
+          ✔ PDF A4 &nbsp;✔ 28 páginas &nbsp;✔ Contenido original y seguro
         </p>
       </div>
 

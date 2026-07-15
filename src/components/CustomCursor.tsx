@@ -4,13 +4,12 @@ export default function CustomCursor() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
-  if (isTouch) return null
-
   useEffect(() => {
+    if (isTouch) return
     const canvas = canvasRef.current!
     const ctx = canvas.getContext('2d')!
     let mouse = { x: -200, y: -200 }
-    let ring = { x: -200, y: -200 }
+    const ring = { x: -200, y: -200 }
     const particles: { x: number; y: number; r: number; life: number }[] = []
 
     const resize = () => {
@@ -75,7 +74,9 @@ export default function CustomCursor() {
       window.removeEventListener('mousemove', onMove)
       window.removeEventListener('click', onClick)
     }
-  }, [])
+  }, [isTouch])
+
+  if (isTouch) return null
 
   return (
     <canvas

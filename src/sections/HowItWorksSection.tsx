@@ -9,18 +9,18 @@ gsap.registerPlugin(ScrollTrigger)
 const STEPS = [
   {
     icon: <Search size={28} className="text-gold" />,
-    title: 'Elegí tu diseño',
-    description: 'Navegá entre más de 100 diseños únicos organizados por categorías. Hay algo para todos.',
+    title: 'Conocé el libro',
+    description: 'Mirá la portada, las páginas reales de muestra y todo lo que incluye antes de decidir.',
   },
   {
     icon: <MousePointerClick size={28} className="text-coral" />,
     title: 'Comprá con seguridad',
-    description: 'Pagá de forma segura con MercadoPago, tarjeta o transferencia. Proceso en segundos.',
+    description: 'El pago se realizará de forma segura con Mercado Pago cuando habilitemos el lanzamiento.',
   },
   {
     icon: <Printer size={28} className="text-sage" />,
     title: 'Imprimí y disfrutá',
-    description: 'Recibís el PDF al instante en tu mail. Imprimí en casa o en cualquier imprenta.',
+    description: 'El libro está preparado en PDF A4 para imprimir en casa o en una imprenta.',
   },
 ]
 
@@ -48,7 +48,7 @@ export default function HowItWorksSection() {
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-parchment mb-4">
             ¿Cómo <span className="living-gradient">funciona</span>?
           </h2>
-          <p className="text-parchment/40 text-lg">Tres pasos simples para tener tu diseño.</p>
+          <p className="text-parchment/40 text-lg">Una experiencia clara, segura y pensada para las familias.</p>
         </div>
 
         <div ref={containerRef} className="grid grid-cols-1 md:grid-cols-3 gap-4 relative">

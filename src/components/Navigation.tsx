@@ -19,7 +19,7 @@ export default function Navigation() {
   const links = [
     { label: 'Categorías', href: '#categorias' },
     { label: 'Cómo funciona', href: '#como-funciona' },
-    { label: 'Destacados', href: '#destacados' },
+    { label: 'El libro', href: '#destacados' },
     { label: 'Contacto', href: '#contacto' },
   ]
 
@@ -40,7 +40,7 @@ export default function Navigation() {
             href="#comprar"
             className="bg-charcoal text-parchment px-5 py-2 rounded-full text-sm font-semibold hover:bg-gold transition-colors duration-300"
           >
-            Comprar
+            Ver lanzamiento
           </a>
         </nav>
 
@@ -65,7 +65,7 @@ export default function Navigation() {
           ))}
           <a href="#comprar" onClick={() => setMenuOpen(false)}
             className="mt-3 block text-center bg-charcoal text-parchment px-5 py-2 rounded-full text-sm font-semibold">
-            Comprar
+            Ver lanzamiento
           </a>
         </div>
       )}

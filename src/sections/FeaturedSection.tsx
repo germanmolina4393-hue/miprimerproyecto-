@@ -1,35 +1,17 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import FeaturedCard from '../components/FeaturedCard'
+import { BookOpen, Check, ShieldCheck } from 'lucide-react'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// =====================================================================
-// REEMPLAZÁ paymentLink de cada producto con tu link real de MercadoPago
-// Ejemplo: https://mpago.la/XXXXXXXXX
-// =====================================================================
-const INDIVIDUAL_LINK = 'https://mpago.la/18X3ruY'
-const PACK5_LINK = 'https://mpago.la/267Kc7C'
-
-const FEATURED = [
-  { title: 'León majestuoso', image: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Mandala zen', image: 'https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Bosque encantado', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Princesa del castillo', image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Dino aventurero', image: 'https://images.unsplash.com/photo-1615243029542-4fcced64c70e?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Jardín de rosas', image: 'https://images.unsplash.com/photo-1490750967868-88df5691cc47?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Galaxia colorida', image: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Mariposa mágica', image: 'https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Elefante sabio', image: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Pack Navidad (5 diseños)', image: 'https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=600&h=400&fit=crop', price: '1.800', paymentLink: PACK5_LINK },
-]
+const SAMPLES = ['/assets/products/dinosaurios-muestra-01.jpg', '/assets/products/dinosaurios-muestra-02.jpg', '/assets/products/dinosaurios-muestra-03.jpg']
 
 export default function FeaturedSection() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const cards = containerRef.current?.querySelectorAll('.featured-card')
+    const cards = containerRef.current?.querySelectorAll('.product-reveal')
     if (!cards?.length) return
 
     gsap.fromTo(
@@ -47,31 +29,33 @@ export default function FeaturedSection() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-charcoal mb-4">
-            Diseños <span className="living-gradient">destacados</span>
+            Nuestra primera <span className="living-gradient">joyita</span>
           </h2>
           <p className="text-charcoal/50 text-lg max-w-xl mx-auto">
-            Los favoritos de nuestra comunidad. Listos para descargar ahora mismo.
+            Mirá páginas reales del producto que vas a recibir.
           </p>
         </div>
 
-        <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-          {FEATURED.map(item => (
-            <div key={item.title} className="featured-card">
-              <FeaturedCard {...item} />
+        <div ref={containerRef} className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] items-start">
+          <div className="product-reveal rounded-3xl bg-white p-5 shadow-xl">
+            <img src="/assets/products/dinosaurios-cover.jpg" alt="Portada de Dinosaurios para Colorear" className="w-full rounded-2xl" />
+          </div>
+          <div className="product-reveal pt-2">
+            <span className="inline-flex items-center gap-2 rounded-full bg-sage/15 px-4 py-2 text-sm font-semibold text-sage"><ShieldCheck size={16} /> Contenido original y seguro</span>
+            <h3 className="mt-5 font-serif text-4xl font-bold text-charcoal">Dinosaurios para Colorear</h3>
+            <p className="mt-2 text-sm font-semibold tracking-wide text-gold">COLECCIÓN FUNDADORA · NGM-MDC-001</p>
+            <p className="mt-5 text-lg leading-relaxed text-charcoal/60">Una aventura educativa protagonizada por Dino y Trici, creada para que los chicos coloreen, aprendan y resuelvan pequeños desafíos.</p>
+            <ul className="mt-6 grid gap-3 sm:grid-cols-2 text-charcoal/75">
+              {['28 páginas interiores', 'Formato PDF A4', 'Edad sugerida: 4 a 8 años', 'Dinosaurios y datos curiosos', 'Desafíos sin respuestas marcadas', 'Diploma final incluido'].map(item => <li key={item} className="flex items-center gap-2"><Check size={17} className="text-sage" /> {item}</li>)}
+            </ul>
+            <div id="comprar" className="mt-8 rounded-2xl border border-gold/25 bg-gold/5 p-6">
+              <div className="flex items-center gap-3"><BookOpen className="text-gold" /><p className="font-semibold text-charcoal">Lanzamiento en preparación</p></div>
+              <p className="mt-2 text-sm text-charcoal/55">Estamos configurando el precio y la entrega automática. El botón de compra se habilitará después de comprobar todo el circuito.</p>
             </div>
-          ))}
+          </div>
         </div>
-
-        {/* CTA general */}
-        <div id="comprar" className="mt-16 text-center bg-gradient-to-r from-gold/10 via-coral/10 to-sage/10 rounded-3xl p-10">
-          <h3 className="font-serif text-3xl font-bold text-charcoal mb-3">¿Querés todos los diseños?</h3>
-          <p className="text-charcoal/50 mb-6">Accedé al pack completo y ahorrá más del 50%.</p>
-          <a
-            href="#comprar"
-            className="inline-block bg-charcoal text-parchment px-10 py-4 rounded-full font-semibold text-base hover:bg-gold transition-colors duration-300"
-          >
-            Ver todos los packs y precios ↓
-          </a>
+        <div className="mt-10 grid gap-5 sm:grid-cols-3">
+          {SAMPLES.map((image, index) => <figure key={image} className="product-reveal overflow-hidden rounded-2xl bg-white p-3 shadow-sm"><img src={image} alt={`Página real de muestra ${index + 1}`} className="h-full w-full rounded-xl object-cover" /></figure>)}
         </div>
       </div>
     </section>

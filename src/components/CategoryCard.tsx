@@ -8,9 +8,10 @@ interface Props {
   image: string
   count: number
   description: string
+  available: boolean
 }
 
-function CategoryModal({ title, image, count, description, badge, onClose }: Props & { onClose: () => void }) {
+function CategoryModal({ title, image, count, description, badge, available, onClose }: Props & { onClose: () => void }) {
   return (
     <div
       className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-charcoal/70 backdrop-blur-sm"
@@ -36,21 +37,21 @@ function CategoryModal({ title, image, count, description, badge, onClose }: Pro
 
         <div className="p-6">
           <p className="text-charcoal/60 text-sm leading-relaxed mb-4">{description}</p>
-          <p className="text-charcoal/40 text-xs mb-5">📄 {count} diseños disponibles en esta categoría</p>
-          <a
-            href="#destacados"
-            onClick={onClose}
-            className="flex items-center justify-center gap-2 bg-charcoal text-parchment px-6 py-3 rounded-full font-semibold text-sm hover:bg-gold transition-colors duration-300"
-          >
-            Ver diseños de esta categoría <ArrowRight size={15} />
-          </a>
+          <p className="text-charcoal/40 text-xs mb-5">{available ? `📘 ${count} libro disponible` : '🛠️ En producción bajo la filosofía NGM Studio'}</p>
+          {available ? (
+            <a href="#destacados" onClick={onClose} className="flex items-center justify-center gap-2 bg-charcoal text-parchment px-6 py-3 rounded-full font-semibold text-sm hover:bg-gold transition-colors duration-300">
+              Conocer el libro <ArrowRight size={15} />
+            </a>
+          ) : (
+            <p className="text-center rounded-full bg-charcoal/5 px-6 py-3 text-sm font-semibold text-charcoal/50">Próximamente</p>
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-export default function CategoryCard({ title, badge, image, count, description }: Props) {
+export default function CategoryCard({ title, badge, image, count, description, available }: Props) {
   const [open, setOpen] = useState(false)
 
   return (
@@ -72,11 +73,11 @@ export default function CategoryCard({ title, badge, image, count, description }
         </div>
         <div className="p-4">
           <h3 className="font-serif text-lg font-semibold text-charcoal">{title}</h3>
-          <p className="text-sm text-charcoal/50 mt-1">{count} diseños disponibles</p>
+          <p className="text-sm text-charcoal/50 mt-1">{available ? 'Libro PDF disponible' : 'En producción'}</p>
         </div>
       </TiltCard>
 
-      {open && <CategoryModal title={title} badge={badge} image={image} count={count} description={description} onClose={() => setOpen(false)} />}
+      {open && <CategoryModal title={title} badge={badge} image={image} count={count} description={description} available={available} onClose={() => setOpen(false)} />}
     </>
   )
 }

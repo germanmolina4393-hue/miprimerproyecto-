@@ -23,8 +23,8 @@ export default function PreviewModal({ title, image, price, paymentLink, onClose
   }, [onClose])
 
   const handleBuy = () => {
-    if ((window as any).fbq) {
-      ;(window as any).fbq('track', 'InitiateCheckout', {
+    if (window.fbq) {
+      window.fbq('track', 'InitiateCheckout', {
         content_name: title,
         value: parseInt(price.replace('.', '')),
         currency: 'ARS',
