@@ -28,8 +28,8 @@ function CategoryModal({ title, image, count, description, badge, available, onC
           <X size={18} />
         </button>
 
-        <div className="relative h-56 overflow-hidden">
-          <img src={image} alt={title} className="w-full h-full object-cover" />
+        <div className={`relative h-56 overflow-hidden ${available ? 'bg-white' : ''}`}>
+          <img src={image} alt={title} className={`w-full h-full ${available ? 'object-contain p-3' : 'object-cover'}`} />
           <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />
           <span className="absolute top-4 left-4 bg-gold text-white text-xs font-semibold px-3 py-1 rounded-full">{badge}</span>
           <p className="absolute bottom-4 left-4 text-white font-serif text-2xl font-bold">{title}</p>
@@ -60,8 +60,8 @@ export default function CategoryCard({ title, badge, image, count, description, 
         className="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-shadow duration-500 card-overlay cursor-pointer"
         onClick={() => setOpen(true)}
       >
-        <div className="relative overflow-hidden h-52 card-image-zoom">
-          <img src={image} alt={title} loading="lazy" className="w-full h-full object-cover" />
+        <div className={`relative overflow-hidden h-52 card-image-zoom ${available ? 'bg-white' : ''}`}>
+          <img src={image} alt={title} loading="lazy" className={`w-full h-full ${available ? 'object-contain p-2' : 'object-cover'}`} />
           <span className="absolute top-3 left-3 bg-gold text-white text-xs font-semibold px-3 py-1 rounded-full">
             {badge}
           </span>
