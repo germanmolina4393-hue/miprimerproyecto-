@@ -9,8 +9,8 @@ gsap.registerPlugin(ScrollTrigger)
 const STEPS = [
   {
     icon: <Search size={28} className="text-gold" />,
-    title: 'Conocé el libro',
-    description: 'Mirá la portada, las páginas reales de muestra y todo lo que incluye antes de decidir.',
+    title: 'Elegí tu aventura',
+    description: 'Explorá las siete portadas, conocé cada temática y elegí el libro ideal.',
   },
   {
     icon: <MousePointerClick size={28} className="text-coral" />,

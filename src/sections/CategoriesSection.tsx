@@ -2,15 +2,18 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import CategoryCard from '../components/CategoryCard'
+import { BOOK_COVERS } from '../bookCovers'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const CATEGORIES = [
-  { title: 'Dinosaurios', badge: 'Disponible', image: '/assets/products/dinosaurios-cover.jpg', count: 1, description: 'Nuestra Edición Fundadora: 28 páginas de aventuras, datos curiosos, desafíos y diploma final.', available: true },
-  { title: 'Animales de la Granja', badge: 'Próximamente', image: '/assets/categories/granja.jpg', count: 0, description: 'Animales amigables y actividades educativas creadas desde cero por NGM Studio.', available: false },
-  { title: 'Unicornios', badge: 'Próximamente', image: '/assets/categories/unicornios.jpg', count: 0, description: 'Un mundo mágico con personajes completamente originales.', available: false },
-  { title: 'Vehículos', badge: 'Próximamente', image: '/assets/categories/vehiculos.jpg', count: 0, description: 'Autos, camiones, trenes y aventuras para pequeños fanáticos de los motores.', available: false },
-  { title: 'Mundo Marino', badge: 'Próximamente', image: '/assets/categories/marino.jpg', count: 0, description: 'Animales del océano, curiosidades y actividades para aprender coloreando.', available: false },
+export const BOOKS = [
+  { title: 'Dinosaurios para Colorear', code: 'NGM-MDC-001', badge: 'Disponible', image: BOOK_COVERS.dinosaurios, pages: 28, description: 'Dinosaurios, datos curiosos, pequeños desafíos y diploma de Pequeño Paleontólogo.' },
+  { title: 'Animales de la Granja', code: 'NGM-MDC-002', badge: 'Disponible', image: BOOK_COVERS.granja, pages: 28, description: 'Una aventura entre animales amigables, escenas rurales y actividades educativas.' },
+  { title: 'Mundo Marino', code: 'NGM-MDC-003', badge: 'Disponible', image: BOOK_COVERS['mundo-marino'], pages: 28, description: 'Un recorrido por el océano con criaturas marinas, curiosidades y juegos para aprender.' },
+  { title: 'Vehículos para Colorear', code: 'NGM-MDC-004', badge: 'Disponible', image: BOOK_COVERS.vehiculos, pages: 28, description: 'Autos, camiones, máquinas y aventuras para pequeños fanáticos del movimiento.' },
+  { title: 'Unicornios para Colorear', code: 'NGM-MDC-005', badge: 'Disponible', image: BOOK_COVERS.unicornios, pages: 28, description: 'Un mundo mágico de amistad, emociones y personajes originales de NGM Studio.' },
+  { title: 'Navidad para Colorear', code: 'NGM-MDC-006', badge: 'Disponible', image: BOOK_COVERS.navidad, pages: 28, description: 'Escenas navideñas, juegos y momentos especiales para disfrutar en familia.' },
+  { title: 'Las Estaciones del Año', code: 'NGM-MDC-007', badge: 'Disponible', image: BOOK_COVERS.estaciones, pages: 28, description: 'Primavera, verano, otoño e invierno reunidos en una aventura creativa y educativa.' },
 ]
 
 export default function CategoriesSection() {
@@ -34,16 +37,16 @@ export default function CategoriesSection() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="font-serif text-4xl md:text-5xl font-bold text-charcoal mb-4">
-            Explorá nuestras <span className="living-gradient">categorías</span>
+            Explorá nuestros <span className="living-gradient">libros</span>
           </h2>
           <p className="text-charcoal/50 text-lg max-w-xl mx-auto">
-            Hacé clic en cualquier categoría para ver los diseños disponibles.
+            Siete libros originales, completos y listos para descubrir.
           </p>
         </div>
-        <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-          {CATEGORIES.map(cat => (
-            <div key={cat.title} className="category-card">
-              <CategoryCard {...cat} />
+        <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {BOOKS.map(book => (
+            <div key={book.code} className="category-card">
+              <CategoryCard {...book} />
             </div>
           ))}
         </div>

@@ -46,8 +46,8 @@ export default function HeroSection({ show }: Props) {
         </h1>
 
         <p ref={descRef} className="text-charcoal/60 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-          Conocé Dinosaurios para Colorear: un libro infantil original con 28 páginas,
-          actividades educativas y diploma de Pequeño Paleontólogo.
+          Descubrí una colección de siete libros infantiles originales, con 28 páginas cada uno,
+          actividades educativas y aventuras creadas por NGM Studio.
         </p>
 
         <div ref={btnsRef} className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -56,7 +56,7 @@ export default function HeroSection({ show }: Props) {
             onClick={trackClick}
             className="inline-flex items-center gap-2 bg-charcoal text-parchment px-8 py-4 rounded-full font-semibold text-base hover:bg-gold transition-colors duration-300"
           >
-            Ver el libro <ArrowRight size={18} />
+            Ver la colección <ArrowRight size={18} />
           </a>
           <a
             href="#como-funciona"
@@ -67,7 +67,7 @@ export default function HeroSection({ show }: Props) {
         </div>
 
         <p className="mt-8 text-sm text-charcoal/40">
-          ✔ PDF A4 &nbsp;✔ 28 páginas &nbsp;✔ Contenido original y seguro
+          ✔ 7 libros &nbsp;✔ PDF A4 &nbsp;✔ Contenido original y seguro
         </p>
       </div>
 

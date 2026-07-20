@@ -1,61 +1,75 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { BookOpen, Check, ShieldCheck } from 'lucide-react'
+import { BookOpen, Check, ShieldCheck, Sparkles } from 'lucide-react'
+import { BOOKS } from './CategoriesSection'
 
 gsap.registerPlugin(ScrollTrigger)
-
-const SAMPLES = ['/assets/products/dinosaurios-muestra-01.jpg', '/assets/products/dinosaurios-muestra-02.jpg', '/assets/products/dinosaurios-muestra-03.jpg']
 
 export default function FeaturedSection() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const cards = containerRef.current?.querySelectorAll('.product-reveal')
-    if (!cards?.length) return
+    const items = containerRef.current?.querySelectorAll('.product-reveal')
+    if (!items?.length) return
 
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1, y: 0, stagger: 0.08, duration: 0.6, ease: 'power2.out',
-        scrollTrigger: { trigger: containerRef.current, start: 'top 85%', toggleActions: 'play none none none' },
-      }
-    )
+    gsap.fromTo(items, { opacity: 0, y: 35 }, {
+      opacity: 1,
+      y: 0,
+      stagger: 0.07,
+      duration: 0.6,
+      ease: 'power2.out',
+      scrollTrigger: { trigger: containerRef.current, start: 'top 85%', toggleActions: 'play none none none' },
+    })
   }, [])
 
   return (
-    <section id="destacados" className="py-24 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl font-bold text-charcoal mb-4">
-            Nuestra primera <span className="living-gradient">joyita</span>
+    <section id="destacados" className="py-24 px-6 bg-white/45">
+      <div ref={containerRef} className="max-w-7xl mx-auto">
+        <div className="mx-auto max-w-3xl text-center product-reveal">
+          <span className="inline-flex items-center gap-2 rounded-full bg-gold/10 px-4 py-2 text-sm font-semibold text-gold">
+            <Sparkles size={16} /> Colección Mundo de Colores
+          </span>
+          <h2 className="mt-5 font-serif text-4xl md:text-5xl font-bold text-charcoal">
+            Siete mundos, una misma <span className="living-gradient">calidad</span>
           </h2>
-          <p className="text-charcoal/50 text-lg max-w-xl mx-auto">
-            Mirá páginas reales del producto que vas a recibir.
+          <p className="mt-5 text-lg leading-relaxed text-charcoal/55">
+            Cada libro fue creado, revisado y terminado página por página bajo la filosofía de NGM Studio.
           </p>
         </div>
 
-        <div ref={containerRef} className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] items-start">
-          <div className="product-reveal rounded-3xl bg-white p-5 shadow-xl">
-            <img src="/assets/products/dinosaurios-cover.jpg" alt="Portada de Dinosaurios para Colorear" className="w-full rounded-2xl" />
-          </div>
-          <div className="product-reveal pt-2">
-            <span className="inline-flex items-center gap-2 rounded-full bg-sage/15 px-4 py-2 text-sm font-semibold text-sage"><ShieldCheck size={16} /> Contenido original y seguro</span>
-            <h3 className="mt-5 font-serif text-4xl font-bold text-charcoal">Dinosaurios para Colorear</h3>
-            <p className="mt-2 text-sm font-semibold tracking-wide text-gold">COLECCIÓN FUNDADORA · NGM-MDC-001</p>
-            <p className="mt-5 text-lg leading-relaxed text-charcoal/60">Una aventura educativa protagonizada por Dino y Trici, creada para que los chicos coloreen, aprendan y resuelvan pequeños desafíos.</p>
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2 text-charcoal/75">
-              {['28 páginas interiores', 'Formato PDF A4', 'Edad sugerida: 4 a 8 años', 'Dinosaurios y datos curiosos', 'Desafíos sin respuestas marcadas', 'Diploma final incluido'].map(item => <li key={item} className="flex items-center gap-2"><Check size={17} className="text-sage" /> {item}</li>)}
-            </ul>
-            <div id="comprar" className="mt-8 rounded-2xl border border-gold/25 bg-gold/5 p-6">
-              <div className="flex items-center gap-3"><BookOpen className="text-gold" /><p className="font-semibold text-charcoal">Lanzamiento en preparación</p></div>
-              <p className="mt-2 text-sm text-charcoal/55">Estamos configurando el precio y la entrega automática. El botón de compra se habilitará después de comprobar todo el circuito.</p>
-            </div>
-          </div>
+        <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
+          {BOOKS.map(book => (
+            <figure key={book.code} className="product-reveal group rounded-2xl bg-white p-2 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+              <img src={book.image} alt={`Portada de ${book.title}`} className="aspect-[1/1.414] w-full rounded-xl object-cover" loading="lazy" />
+              <figcaption className="px-1 pb-2 pt-3 text-center">
+                <span className="text-[11px] font-bold tracking-wide text-gold">{book.code}</span>
+              </figcaption>
+            </figure>
+          ))}
         </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-3">
-          {SAMPLES.map((image, index) => <figure key={image} className="product-reveal overflow-hidden rounded-2xl bg-white p-3 shadow-sm"><img src={image} alt={`Página real de muestra ${index + 1}`} className="h-full w-full rounded-xl object-cover" /></figure>)}
+
+        <div className="mt-14 grid gap-8 rounded-3xl border border-gold/20 bg-parchment p-7 product-reveal lg:grid-cols-[1fr_1.15fr] lg:p-10">
+          <div>
+            <div className="flex items-center gap-3 text-charcoal">
+              <BookOpen className="text-gold" />
+              <h3 className="font-serif text-3xl font-bold">Una colección lista para crecer</h3>
+            </div>
+            <p className="mt-4 leading-relaxed text-charcoal/60">
+              Los siete títulos ya forman parte del catálogo oficial. Halloween y futuras aventuras se sumarán como nuevos lanzamientos, sin retrasar esta primera colección.
+            </p>
+          </div>
+          <ul className="grid gap-3 sm:grid-cols-2 text-charcoal/75">
+            {['28 páginas interiores por libro', 'Formato PDF A4 para imprimir', 'Ilustraciones y personajes originales', 'Textos y actividades revisados', 'Contenido infantil seguro', 'Calidad editorial NGM Studio'].map(item => (
+              <li key={item} className="flex items-start gap-2">
+                <Check size={18} className="mt-0.5 shrink-0 text-sage" /> {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-8 flex items-center justify-center gap-2 text-sm font-semibold text-sage product-reveal">
+          <ShieldCheck size={18} /> Archivos finales protegidos hasta completar la compra
         </div>
       </div>
     </section>
