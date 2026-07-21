@@ -1,5 +1,7 @@
-import { useState } from 'react'
-import { X, ArrowRight, ShieldCheck } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import type { FormEvent } from 'react'
+import { createPortal } from 'react-dom'
+import { X, ArrowRight, LoaderCircle, ShieldCheck } from 'lucide-react'
 import TiltCard from './TiltCard'
 
 interface Props {
@@ -24,40 +26,91 @@ function trackCheckout(title: string, price: string) {
 }
 
 function CategoryModal({ title, code, image, pages, price, paymentLink, description, badge, onClose }: Props & { onClose: () => void }) {
-  return (
-    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-charcoal/70 backdrop-blur-sm" onClick={onClose}>
-      <div className="relative bg-parchment rounded-3xl overflow-hidden max-w-lg w-full shadow-2xl" onClick={e => e.stopPropagation()}>
-        <button onClick={onClose} className="absolute top-4 right-4 z-10 w-9 h-9 bg-charcoal/10 hover:bg-charcoal/20 rounded-full flex items-center justify-center transition-colors" aria-label="Cerrar">
-          <X size={18} />
-        </button>
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
 
-        <div className="relative h-72 overflow-hidden bg-white">
-          <img src={image} alt={`Portada de ${title}`} className="w-full h-full object-contain p-3" />
-          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />
-          <span className="absolute top-4 left-4 bg-gold text-white text-xs font-semibold px-3 py-1 rounded-full">{badge}</span>
-          <p className="absolute bottom-4 left-4 text-white font-serif text-2xl font-bold">{title}</p>
-        </div>
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [])
 
-        <div className="p-6">
-          <p className="text-charcoal/60 text-sm leading-relaxed mb-4">{description}</p>
-          <div className="mb-5 flex flex-wrap gap-2 text-xs font-semibold">
-            <span className="rounded-full bg-gold/10 px-3 py-1.5 text-gold">{code}</span>
-            <span className="rounded-full bg-sage/10 px-3 py-1.5 text-sage">PDF A4 · {pages} páginas</span>
+  const continueToPayment = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setSending(true)
+    setError('')
+
+    try {
+      const response = await fetch('https://formspree.io/f/xykakpav', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          nombre: name,
+          email,
+          producto: `${title} – ${code}`,
+          importe: `$${price} ARS`,
+          _subject: `Intención de compra – ${code} – ${name}`,
+        }),
+      })
+
+      if (!response.ok) throw new Error('No se pudo guardar el correo')
+      trackCheckout(title, price)
+      window.location.href = paymentLink
+    } catch {
+      setError('No pudimos guardar tus datos. Revisá la conexión e intentá nuevamente.')
+      setSending(false)
+    }
+  }
+
+  return createPortal(
+    <div className="fixed inset-0 z-[300] overflow-y-auto bg-charcoal/75 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="mx-auto my-5 w-full max-w-3xl overflow-hidden rounded-3xl bg-parchment shadow-2xl" onClick={event => event.stopPropagation()}>
+        <div className="grid md:grid-cols-[0.8fr_1.2fr]">
+          <div className="relative min-h-72 bg-white p-5 md:min-h-full">
+            <img src={image} alt={`Portada de ${title}`} className="h-full max-h-[560px] w-full object-contain" />
+            <span className="absolute left-5 top-5 rounded-full bg-gold px-3 py-1 text-xs font-semibold text-white">{badge}</span>
           </div>
-          <div className="mb-4 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/45">Libro completo</p>
-              <p className="font-serif text-3xl font-bold text-charcoal">${price} <span className="text-sm font-normal text-charcoal/45">ARS</span></p>
+
+          <div className="relative p-6 sm:p-8">
+            <button type="button" onClick={onClose} className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-charcoal/10 transition-colors hover:bg-charcoal/20" aria-label="Cerrar"><X size={18} /></button>
+            <p className="pr-12 text-xs font-bold tracking-wide text-gold">{code}</p>
+            <h3 className="mt-2 pr-12 font-serif text-3xl font-bold text-charcoal">{title}</h3>
+            <p className="mt-3 text-sm leading-relaxed text-charcoal/60">{description}</p>
+            <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold">
+              <span className="rounded-full bg-sage/10 px-3 py-1.5 text-sage">PDF A4 · {pages} páginas</span>
+              <span className="rounded-full bg-gold/10 px-3 py-1.5 text-gold">Contenido original NGM Studio</span>
             </div>
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-sage"><ShieldCheck size={15} /> Pago seguro</span>
+
+            <div className="mt-5 flex items-end justify-between gap-4 border-t border-charcoal/10 pt-5">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/45">Libro completo</p>
+                <p className="font-serif text-3xl font-bold text-charcoal">${price} <span className="text-sm font-normal text-charcoal/45">ARS</span></p>
+              </div>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-sage"><ShieldCheck size={15} /> Pago seguro</span>
+            </div>
+
+            <form className="mt-5" onSubmit={continueToPayment}>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <label className="text-xs font-semibold text-charcoal">Nombre y apellido
+                  <input required value={name} onChange={event => setName(event.target.value)} className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-3 py-2.5 text-sm font-normal outline-none transition-colors focus:border-gold" placeholder="Tu nombre" />
+                </label>
+                <label className="text-xs font-semibold text-charcoal">Correo para recibir el PDF
+                  <input required type="email" value={email} onChange={event => setEmail(event.target.value)} className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-3 py-2.5 text-sm font-normal outline-none transition-colors focus:border-gold" placeholder="tu@email.com" />
+                </label>
+              </div>
+              {error && <p className="mt-3 rounded-xl bg-coral/10 px-3 py-2.5 text-xs font-semibold text-coral" role="alert">{error}</p>}
+              <button type="submit" disabled={sending} className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-3.5 text-sm font-semibold text-parchment transition-colors hover:bg-gold disabled:cursor-not-allowed disabled:opacity-50">
+                {sending ? <><LoaderCircle size={16} className="animate-spin" /> Guardando tus datos…</> : <>Continuar a Mercado Pago <ArrowRight size={16} /></>}
+              </button>
+              <p className="mt-3 text-center text-xs text-charcoal/45">Usá este mismo correo en Mercado Pago para identificar tu compra.</p>
+            </form>
           </div>
-          <a href={paymentLink} target="_blank" rel="noopener noreferrer" onClick={() => trackCheckout(title, price)} className="flex items-center justify-center gap-2 bg-charcoal text-parchment px-6 py-3 rounded-full font-semibold text-sm hover:bg-gold transition-colors duration-300">
-            Comprar con Mercado Pago <ArrowRight size={15} />
-          </a>
-          <p className="mt-3 text-center text-xs text-charcoal/45">Después de verificar el pago, recibirás el PDF por correo.</p>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   )
 }
 

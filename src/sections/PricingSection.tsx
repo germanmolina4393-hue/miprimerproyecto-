@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import type { FormEvent } from 'react'
+import { createPortal } from 'react-dom'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowRight, Check, LoaderCircle, ShieldCheck, X } from 'lucide-react'
@@ -8,6 +9,7 @@ import { BOOKS } from '../books'
 gsap.registerPlugin(ScrollTrigger)
 
 const PACK_LINK = 'https://mpago.la/242QJqb'
+const COLLECTION_LINK = 'https://mpago.la/1xJAgnk'
 
 const PLANS = [
   {
@@ -25,7 +27,7 @@ const PLANS = [
     price: '24.900',
     description: 'Los siete libros de Mundo de Colores',
     features: ['7 libros completos en PDF', '196 páginas interiores en total', 'Formato A4 para imprimir', 'Ahorrás $9.400'],
-    link: 'https://mpago.la/1xJAgnk',
+    link: COLLECTION_LINK,
     highlight: true,
     requiresSelection: false,
     note: 'Recibís los siete libros después de verificar el pago.',
@@ -149,9 +151,86 @@ function PackSelectionModal({ onClose }: { onClose: () => void }) {
   )
 }
 
+function CollectionCheckoutModal({ onClose }: { onClose: () => void }) {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [])
+
+  const continueToPayment = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setSending(true)
+    setError('')
+
+    try {
+      const response = await fetch('https://formspree.io/f/xykakpav', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          nombre: name,
+          email,
+          producto: 'Colección Completa – Mundo de Colores – 7 Libros',
+          importe: '$24.900 ARS',
+          _subject: `Intención de compra – Colección Completa – ${name}`,
+        }),
+      })
+
+      if (!response.ok) throw new Error('No se pudo guardar el correo')
+      trackCheckout('Colección Completa', '24.900')
+      window.location.href = COLLECTION_LINK
+    } catch {
+      setError('No pudimos guardar tus datos. Revisá la conexión e intentá nuevamente.')
+      setSending(false)
+    }
+  }
+
+  return createPortal(
+    <div className="fixed inset-0 z-[300] overflow-y-auto bg-charcoal/75 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="mx-auto my-12 w-full max-w-xl rounded-3xl bg-parchment p-6 shadow-2xl sm:p-8" onClick={event => event.stopPropagation()}>
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-wider text-gold">Colección completa · $24.900 ARS</p>
+            <h3 className="mt-1 font-serif text-3xl font-bold text-charcoal">Los siete mundos</h3>
+            <p className="mt-2 text-sm leading-relaxed text-charcoal/55">Ingresá el correo donde querés recibir los siete libros en PDF.</p>
+          </div>
+          <button type="button" onClick={onClose} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-charcoal/10 transition-colors hover:bg-charcoal/20" aria-label="Cerrar"><X size={18} /></button>
+        </div>
+
+        <div className="mt-6 grid grid-cols-7 gap-2">
+          {BOOKS.map(book => <img key={book.code} src={book.image} alt={`Portada de ${book.title}`} className="aspect-[1/1.414] w-full rounded-lg object-cover shadow-sm" />)}
+        </div>
+
+        <form className="mt-6" onSubmit={continueToPayment}>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <label className="text-sm font-semibold text-charcoal">Nombre y apellido
+              <input required value={name} onChange={event => setName(event.target.value)} className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-4 py-3 font-normal outline-none transition-colors focus:border-gold" placeholder="Tu nombre" />
+            </label>
+            <label className="text-sm font-semibold text-charcoal">Correo para recibir los PDF
+              <input required type="email" value={email} onChange={event => setEmail(event.target.value)} className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-4 py-3 font-normal outline-none transition-colors focus:border-gold" placeholder="tu@email.com" />
+            </label>
+          </div>
+          {error && <p className="mt-4 rounded-xl bg-coral/10 px-4 py-3 text-sm font-semibold text-coral" role="alert">{error}</p>}
+          <button type="submit" disabled={sending} className="mt-6 flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 text-sm font-semibold text-parchment transition-colors hover:bg-gold disabled:cursor-not-allowed disabled:opacity-50">
+            {sending ? <><LoaderCircle size={17} className="animate-spin" /> Guardando tus datos…</> : <>Continuar a Mercado Pago <ArrowRight size={17} /></>}
+          </button>
+          <p className="mt-3 text-center text-xs text-charcoal/45">Usá este mismo correo en Mercado Pago para identificar tu compra.</p>
+        </form>
+      </div>
+    </div>,
+    document.body,
+  )
+}
+
 export default function PricingSection() {
   const containerRef = useRef<HTMLDivElement>(null)
   const [packOpen, setPackOpen] = useState(false)
+  const [collectionOpen, setCollectionOpen] = useState(false)
 
   useEffect(() => {
     const cards = containerRef.current?.querySelectorAll('.pricing-card')
@@ -184,7 +263,7 @@ export default function PricingSection() {
               {plan.requiresSelection ? (
                 <button type="button" onClick={() => setPackOpen(true)} className="flex w-full items-center justify-center gap-2 rounded-full bg-parchment/10 py-3.5 text-sm font-semibold text-parchment transition-all duration-300 hover:bg-gold hover:text-charcoal">Elegir mis 3 libros <ArrowRight size={15} /></button>
               ) : (
-                <a href={plan.link} target="_blank" rel="noopener noreferrer" onClick={() => trackCheckout(plan.name, plan.price)} className="flex w-full items-center justify-center gap-2 rounded-full bg-charcoal py-3.5 text-sm font-semibold text-parchment transition-all duration-300 hover:bg-charcoal/80">Comprar con Mercado Pago <ArrowRight size={15} /></a>
+                <button type="button" onClick={() => setCollectionOpen(true)} className="flex w-full items-center justify-center gap-2 rounded-full bg-charcoal py-3.5 text-sm font-semibold text-parchment transition-all duration-300 hover:bg-charcoal/80">Comprar colección <ArrowRight size={15} /></button>
               )}
             </article>
           ))}
@@ -192,6 +271,7 @@ export default function PricingSection() {
         <p className="mt-8 flex items-center justify-center gap-2 text-center text-sm text-parchment/40"><ShieldCheck size={17} /> Pago seguro con Mercado Pago · Entrega por correo después de verificar el pago</p>
       </div>
       {packOpen && <PackSelectionModal onClose={() => setPackOpen(false)} />}
+      {collectionOpen && <CollectionCheckoutModal onClose={() => setCollectionOpen(false)} />}
     </section>
   )
 }
