@@ -4,6 +4,7 @@ import HeroSection from './sections/HeroSection'
 import CategoriesSection from './sections/CategoriesSection'
 import HowItWorksSection from './sections/HowItWorksSection'
 import FeaturedSection from './sections/FeaturedSection'
+import PricingSection from './sections/PricingSection'
 import ContactSection from './sections/ContactSection'
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
         <CategoriesSection />
         <HowItWorksSection />
         <FeaturedSection />
+        <PricingSection />
         <ContactSection />
       </main>
       <Footer />
