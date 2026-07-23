@@ -3,6 +3,7 @@ import type { FormEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { X, ArrowRight, LoaderCircle, ShieldCheck } from 'lucide-react'
 import TiltCard from './TiltCard'
+import { createCheckout } from '../lib/checkout'
 
 interface Props {
   title: string
@@ -25,7 +26,7 @@ function trackCheckout(title: string, price: string) {
   }
 }
 
-function CategoryModal({ title, code, image, pages, price, paymentLink, description, badge, onClose }: Props & { onClose: () => void }) {
+function CategoryModal({ title, code, image, pages, price, description, badge, onClose }: Props & { onClose: () => void }) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [sending, setSending] = useState(false)
@@ -57,9 +58,9 @@ function CategoryModal({ title, code, image, pages, price, paymentLink, descript
 
       if (!response.ok) throw new Error('No se pudo guardar el correo')
       trackCheckout(title, price)
-      window.location.href = paymentLink
-    } catch {
-      setError('No pudimos guardar tus datos. Revisá la conexión e intentá nuevamente.')
+      await createCheckout({ name, email, productCode: code })
+    } catch (checkoutError) {
+      setError(checkoutError instanceof Error ? checkoutError.message : 'No pudimos iniciar el pago. Intentá nuevamente.')
       setSending(false)
     }
   }

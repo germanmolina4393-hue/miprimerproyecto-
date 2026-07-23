@@ -5,6 +5,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ArrowRight, Check, LoaderCircle, ShieldCheck, X } from 'lucide-react'
 import { BOOKS } from '../books'
+import { createCheckout } from '../lib/checkout'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -90,9 +91,9 @@ function PackSelectionModal({ onClose }: { onClose: () => void }) {
 
       if (!response.ok) throw new Error('No se pudo guardar la selección')
       trackCheckout('Pack 3 Libros', '11.900')
-      window.location.href = PACK_LINK
-    } catch {
-      setError('No pudimos guardar la selección. Revisá tu conexión e intentá nuevamente.')
+      await createCheckout({ name, email, productCode: 'PACK3', selectedCodes: selected })
+    } catch (checkoutError) {
+      setError(checkoutError instanceof Error ? checkoutError.message : 'No pudimos iniciar el pago. Intentá nuevamente.')
       setSending(false)
     }
   }
@@ -183,9 +184,9 @@ function CollectionCheckoutModal({ onClose }: { onClose: () => void }) {
 
       if (!response.ok) throw new Error('No se pudo guardar el correo')
       trackCheckout('Colección Completa', '24.900')
-      window.location.href = COLLECTION_LINK
-    } catch {
-      setError('No pudimos guardar tus datos. Revisá la conexión e intentá nuevamente.')
+      await createCheckout({ name, email, productCode: 'COLLECTION' })
+    } catch (checkoutError) {
+      setError(checkoutError instanceof Error ? checkoutError.message : 'No pudimos iniciar el pago. Intentá nuevamente.')
       setSending(false)
     }
   }
