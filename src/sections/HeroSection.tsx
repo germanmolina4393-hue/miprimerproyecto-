@@ -7,7 +7,6 @@ interface Props {
 }
 
 export default function HeroSection({ show }: Props) {
-  const logoRef = useRef<HTMLDivElement>(null)
   const titleRef = useRef<HTMLHeadingElement>(null)
   const descRef = useRef<HTMLParagraphElement>(null)
   const btnsRef = useRef<HTMLDivElement>(null)
@@ -17,8 +16,7 @@ export default function HeroSection({ show }: Props) {
     if (!show) return
     const tl = gsap.timeline()
     tl.from(bgRef.current, { opacity: 0, duration: 1, ease: 'power2.out' })
-      .from(logoRef.current, { opacity: 0, y: 30, duration: 0.6, ease: 'power2.out' }, '-=0.4')
-      .from(titleRef.current, { opacity: 0, y: 40, duration: 0.7, ease: 'power2.out' }, '-=0.3')
+      .from(titleRef.current, { opacity: 0, y: 40, duration: 0.7, ease: 'power2.out' }, '-=0.4')
       .from(descRef.current, { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' }, '-=0.3')
       .from(btnsRef.current, { opacity: 0, y: 20, duration: 0.5, ease: 'power2.out' }, '-=0.2')
 
@@ -26,8 +24,8 @@ export default function HeroSection({ show }: Props) {
   }, [show])
 
   const trackClick = () => {
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      ;(window as any).fbq('track', 'ViewContent')
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'ViewContent')
     }
   }
 
@@ -42,20 +40,14 @@ export default function HeroSection({ show }: Props) {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-gold/5 blur-3xl" />
 
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
-        <div ref={logoRef}>
-          <span className="inline-block bg-gold/10 text-gold text-xs font-semibold px-4 py-1.5 rounded-full mb-6 tracking-wider uppercase">
-            ✦ Nuevo ✦ Disponible ahora
-          </span>
-        </div>
-
         <h1 ref={titleRef} className="font-serif text-5xl md:text-7xl font-bold text-charcoal leading-tight mb-6">
-          Páginas para colorear<br />
-          <span className="living-gradient">únicas e irrepetibles</span>
+          Aventuras para colorear,<br />
+          <span className="living-gradient">aprender y crear</span>
         </h1>
 
         <p ref={descRef} className="text-charcoal/60 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-10">
-          Diseños originales listos para imprimir. Para niños, adultos y toda la familia.
-          Descargá al instante y empezá a colorear hoy mismo.
+          Descubrí una colección de siete libros infantiles originales, con 28 páginas cada uno,
+          actividades educativas y aventuras creadas por NGM Studio.
         </p>
 
         <div ref={btnsRef} className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -64,7 +56,7 @@ export default function HeroSection({ show }: Props) {
             onClick={trackClick}
             className="inline-flex items-center gap-2 bg-charcoal text-parchment px-8 py-4 rounded-full font-semibold text-base hover:bg-gold transition-colors duration-300"
           >
-            Ver diseños <ArrowRight size={18} />
+            Ver la colección <ArrowRight size={18} />
           </a>
           <a
             href="#como-funciona"
@@ -75,7 +67,7 @@ export default function HeroSection({ show }: Props) {
         </div>
 
         <p className="mt-8 text-sm text-charcoal/40">
-          ✔ Descarga instantánea &nbsp;✔ PDF de alta calidad &nbsp;✔ Pago seguro
+          ✔ 7 libros &nbsp;✔ PDF A4 &nbsp;✔ Contenido original y seguro
         </p>
       </div>
 

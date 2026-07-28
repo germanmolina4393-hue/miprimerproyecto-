@@ -10,8 +10,8 @@ export default function ContactSection() {
     const data = new FormData(form)
 
     // Track Meta Pixel lead event
-    if (typeof window !== 'undefined' && (window as any).fbq) {
-      ;(window as any).fbq('track', 'Lead')
+    if (typeof window !== 'undefined' && window.fbq) {
+      window.fbq('track', 'Lead')
     }
 
     try {
@@ -40,7 +40,7 @@ export default function ContactSection() {
           <h2 className="font-serif text-4xl font-bold text-charcoal mb-4">
             ¿Tenés alguna <span className="living-gradient">pregunta</span>?
           </h2>
-          <p className="text-charcoal/50">Te respondemos en menos de 24 hs.</p>
+          <p className="text-charcoal/50">Escribinos y te respondemos a la brevedad.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">

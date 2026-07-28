@@ -1,78 +1,53 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import FeaturedCard from '../components/FeaturedCard'
+import { BookOpen, Check, ShieldCheck, Sparkles } from 'lucide-react'
+import { BOOKS } from '../books'
 
 gsap.registerPlugin(ScrollTrigger)
-
-// =====================================================================
-// REEMPLAZÁ paymentLink de cada producto con tu link real de MercadoPago
-// Ejemplo: https://mpago.la/XXXXXXXXX
-// =====================================================================
-const INDIVIDUAL_LINK = 'https://mpago.la/18X3ruY'
-const PACK5_LINK = 'https://mpago.la/267Kc7C'
-
-const FEATURED = [
-  { title: 'León majestuoso', image: 'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Mandala zen', image: 'https://images.unsplash.com/photo-1601979031925-424e53b6caaa?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Bosque encantado', image: 'https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Princesa del castillo', image: 'https://images.unsplash.com/photo-1516483638261-f4dbaf036963?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Dino aventurero', image: 'https://images.unsplash.com/photo-1615243029542-4fcced64c70e?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Jardín de rosas', image: 'https://images.unsplash.com/photo-1490750967868-88df5691cc47?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Galaxia colorida', image: 'https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Mariposa mágica', image: 'https://images.unsplash.com/photo-1444927714506-8492d94b4e3d?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Elefante sabio', image: 'https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=600&h=400&fit=crop', price: '500', paymentLink: INDIVIDUAL_LINK },
-  { title: 'Pack Navidad (5 diseños)', image: 'https://images.unsplash.com/photo-1543589077-47d81606c1bf?w=600&h=400&fit=crop', price: '1.800', paymentLink: PACK5_LINK },
-]
 
 export default function FeaturedSection() {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const cards = containerRef.current?.querySelectorAll('.featured-card')
-    if (!cards?.length) return
-
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 40 },
-      {
-        opacity: 1, y: 0, stagger: 0.08, duration: 0.6, ease: 'power2.out',
-        scrollTrigger: { trigger: containerRef.current, start: 'top 85%', toggleActions: 'play none none none' },
-      }
-    )
+    const items = containerRef.current?.querySelectorAll('.product-reveal')
+    if (!items?.length) return
+    gsap.fromTo(items, { opacity: 0, y: 35 }, {
+      opacity: 1, y: 0, stagger: 0.07, duration: 0.6, ease: 'power2.out',
+      scrollTrigger: { trigger: containerRef.current, start: 'top 85%', toggleActions: 'play none none none' },
+    })
   }, [])
 
   return (
-    <section id="destacados" className="py-24 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl font-bold text-charcoal mb-4">
-            Diseños <span className="living-gradient">destacados</span>
-          </h2>
-          <p className="text-charcoal/50 text-lg max-w-xl mx-auto">
-            Los favoritos de nuestra comunidad. Listos para descargar ahora mismo.
-          </p>
+    <section id="destacados" className="py-24 px-6 bg-white/45">
+      <div ref={containerRef} className="max-w-7xl mx-auto">
+        <div className="mx-auto max-w-3xl text-center product-reveal">
+          <span className="inline-flex items-center gap-2 rounded-full bg-gold/10 px-4 py-2 text-sm font-semibold text-gold"><Sparkles size={16} /> Colección Mundo de Colores</span>
+          <h2 className="mt-5 font-serif text-4xl md:text-5xl font-bold text-charcoal">Siete mundos, una misma <span className="living-gradient">calidad</span></h2>
+          <p className="mt-5 text-lg leading-relaxed text-charcoal/55">Cada libro fue creado, revisado y terminado página por página bajo la filosofía de NGM Studio.</p>
         </div>
 
-        <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
-          {FEATURED.map(item => (
-            <div key={item.title} className="featured-card">
-              <FeaturedCard {...item} />
-            </div>
+        <div className="mt-14 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-7">
+          {BOOKS.map(book => (
+            <figure key={book.code} className="product-reveal group rounded-2xl bg-white p-2 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+              <img src={book.image} alt={`Portada de ${book.title}`} className="aspect-[1/1.414] w-full rounded-xl object-cover" loading="lazy" />
+              <figcaption className="px-1 pb-2 pt-3 text-center"><span className="text-[11px] font-bold tracking-wide text-gold">{book.code}</span></figcaption>
+            </figure>
           ))}
         </div>
 
-        {/* CTA general */}
-        <div id="comprar" className="mt-16 text-center bg-gradient-to-r from-gold/10 via-coral/10 to-sage/10 rounded-3xl p-10">
-          <h3 className="font-serif text-3xl font-bold text-charcoal mb-3">¿Querés todos los diseños?</h3>
-          <p className="text-charcoal/50 mb-6">Accedé al pack completo y ahorrá más del 50%.</p>
-          <a
-            href="#comprar"
-            className="inline-block bg-charcoal text-parchment px-10 py-4 rounded-full font-semibold text-base hover:bg-gold transition-colors duration-300"
-          >
-            Ver todos los packs y precios ↓
-          </a>
+        <div className="mt-14 grid gap-8 rounded-3xl border border-gold/20 bg-parchment p-7 product-reveal lg:grid-cols-[1fr_1.15fr] lg:p-10">
+          <div>
+            <div className="flex items-center gap-3 text-charcoal"><BookOpen className="text-gold" /><h3 className="font-serif text-3xl font-bold">Una colección lista para crecer</h3></div>
+            <p className="mt-4 leading-relaxed text-charcoal/60">Los siete títulos ya forman parte del catálogo oficial. Halloween y futuras aventuras se sumarán como nuevos lanzamientos, sin retrasar esta primera colección.</p>
+          </div>
+          <ul className="grid gap-3 sm:grid-cols-2 text-charcoal/75">
+            {['28 páginas interiores por libro', 'Formato PDF A4 para imprimir', 'Ilustraciones y personajes originales', 'Textos y actividades revisados', 'Contenido infantil seguro', 'Calidad editorial NGM Studio'].map(item => (
+              <li key={item} className="flex items-start gap-2"><Check size={18} className="mt-0.5 shrink-0 text-sage" /> {item}</li>
+            ))}
+          </ul>
         </div>
+        <div className="mt-8 flex items-center justify-center gap-2 text-sm font-semibold text-sage product-reveal"><ShieldCheck size={18} /> Archivos finales protegidos hasta completar la compra</div>
       </div>
     </section>
   )
