@@ -1,16 +1,7 @@
 const PRODUCTS = {
   'NGM-MDC-001': { title: 'Dinosaurios para Colorear', price: 4900 },
-  'NGM-MDC-002': { title: 'Animales de la Granja para Colorear', price: 4900 },
-  'NGM-MDC-003': { title: 'Mundo Marino para Colorear', price: 4900 },
-  'NGM-MDC-004': { title: 'Vehículos para Colorear', price: 4900 },
-  'NGM-MDC-005': { title: 'Unicornios para Colorear', price: 4900 },
-  'NGM-MDC-006': { title: 'Navidad para Colorear', price: 4900 },
-  'NGM-MDC-007': { title: 'Las Estaciones del Año para Colorear', price: 4900 },
-  PACK3: { title: 'Pack 3 Libros – Mundo de Colores', price: 11900 },
-  COLLECTION: { title: 'Colección Completa – Mundo de Colores – 7 Libros', price: 24900 },
+  // Solo se habilitan productos cuyo PDF final ya está listo para entregar.
 }
-
-const BOOK_CODES = Object.keys(PRODUCTS).filter(code => code.startsWith('NGM-MDC-'))
 
 function cleanText(value, maxLength) {
   return typeof value === 'string' ? value.trim().slice(0, maxLength) : ''
@@ -41,16 +32,9 @@ export default async function handler(req, res) {
   const email = cleanText(req.body?.email, 160).toLowerCase()
   const productCode = cleanText(req.body?.productCode, 30)
   const product = PRODUCTS[productCode]
-  const selectedCodes = Array.isArray(req.body?.selectedCodes)
-    ? [...new Set(req.body.selectedCodes.map(code => cleanText(code, 20)))]
-    : []
 
   if (!name || !validEmail(email) || !product) {
     return res.status(400).json({ error: 'Revisá el nombre, el correo y el producto.' })
-  }
-
-  if (productCode === 'PACK3' && (selectedCodes.length !== 3 || selectedCodes.some(code => !BOOK_CODES.includes(code)))) {
-    return res.status(400).json({ error: 'El Pack 3 debe incluir exactamente tres libros válidos.' })
   }
 
   const orderId = `MDC-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`
@@ -59,7 +43,7 @@ export default async function handler(req, res) {
     items: [{
       id: productCode,
       title: product.title,
-      description: productCode === 'PACK3' ? `Selección: ${selectedCodes.join(', ')}` : 'Producto digital PDF',
+      description: 'Producto digital PDF',
       category_id: 'books',
       currency_id: 'ARS',
       quantity: 1,
@@ -72,12 +56,11 @@ export default async function handler(req, res) {
       customer_name: name,
       delivery_email: email,
       product_code: productCode,
-      selected_codes: selectedCodes,
     },
     back_urls: {
-      success: `${origin}/?pago=aprobado`,
-      pending: `${origin}/?pago=pendiente`,
-      failure: `${origin}/?pago=rechazado`,
+      success: `${origin}/pago-aprobado`,
+      pending: `${origin}/pago-pendiente`,
+      failure: `${origin}/pago-rechazado`,
     },
     auto_return: 'approved',
   }

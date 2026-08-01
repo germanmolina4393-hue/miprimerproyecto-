@@ -9,6 +9,7 @@ interface Props {
   title: string
   code: string
   badge: string
+  available: boolean
   image: string
   pages: number
   price: string
@@ -117,16 +118,16 @@ function CategoryModal({ title, code, image, pages, price, description, badge, o
 
 export default function CategoryCard(props: Props) {
   const [open, setOpen] = useState(false)
-  const { title, code, badge, image, pages, price } = props
+  const { title, code, badge, image, pages, price, available } = props
 
   return (
     <>
-      <TiltCard className="group rounded-2xl overflow-hidden bg-white shadow-sm hover:shadow-xl transition-shadow duration-500 card-overlay cursor-pointer" onClick={() => setOpen(true)}>
+      <TiltCard className={`group rounded-2xl overflow-hidden bg-white shadow-sm transition-shadow duration-500 card-overlay ${available ? 'cursor-pointer hover:shadow-xl' : 'opacity-75 cursor-default'}`} onClick={() => available && setOpen(true)}>
         <div className="relative overflow-hidden h-80 card-image-zoom bg-white">
           <img src={image} alt={`Portada de ${title}`} loading="lazy" className="w-full h-full object-contain p-3" />
           <span className="absolute top-3 left-3 bg-gold text-white text-xs font-semibold px-3 py-1 rounded-full">{badge}</span>
           <div className="absolute inset-0 bg-charcoal/0 group-hover:bg-charcoal/20 transition-colors duration-300 flex items-center justify-center">
-            <span className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white text-charcoal text-xs font-semibold px-3 py-1.5 rounded-full">Ver y comprar</span>
+            <span className={`transition-opacity duration-300 bg-white text-charcoal text-xs font-semibold px-3 py-1.5 rounded-full ${available ? 'opacity-0 group-hover:opacity-100' : 'opacity-100'}`}>{available ? 'Ver y comprar' : 'En preparación'}</span>
           </div>
         </div>
         <div className="p-4">
