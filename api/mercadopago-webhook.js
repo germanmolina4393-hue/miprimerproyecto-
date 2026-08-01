@@ -2,14 +2,6 @@ import crypto from 'node:crypto'
 
 const EXPECTED_PRICES = {
   'NGM-MDC-001': 4900,
-  'NGM-MDC-002': 4900,
-  'NGM-MDC-003': 4900,
-  'NGM-MDC-004': 4900,
-  'NGM-MDC-005': 4900,
-  'NGM-MDC-006': 4900,
-  'NGM-MDC-007': 4900,
-  PACK3: 11900,
-  COLLECTION: 24900,
 }
 
 function firstHeader(value) {
@@ -132,14 +124,13 @@ export default async function handler(req, res) {
       return res.status(200).json({ received: true, approved: false, validation: 'failed' })
     }
 
-    // En el próximo paso se conectará aquí el correo y el enlace privado.
-    // Por ahora solo se registra un pago aprobado y verificado.
+    // La descarga se habilita en /api/download-book, que vuelve a verificar
+    // este pago antes de leer el archivo privado.
     console.info('Mundo de Colores payment approved', {
       paymentId: String(payment.id),
       orderId,
       productCode,
       deliveryEmail,
-      selectedCodes: payment.metadata?.selected_codes || [],
     })
 
     return res.status(200).json({ received: true, approved: true })
