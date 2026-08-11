@@ -1,6 +1,8 @@
 const PRODUCTS = {
   'NGM-MDC-001': { price: 4900, title: 'Dinosaurios para Colorear' },
   'NGM-MDC-002': { price: 4900, title: 'Animales de la Granja' },
+  'NGM-MDC-006': { price: 4900, title: 'Navidad para Colorear' },
+  'NGM-MDC-007': { price: 4900, title: 'Las Estaciones del Año' },
 }
 
 function paymentIdFrom(req) {

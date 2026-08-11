@@ -3,6 +3,8 @@ import crypto from 'node:crypto'
 const EXPECTED_PRICES = {
   'NGM-MDC-001': 4900,
   'NGM-MDC-002': 4900,
+  'NGM-MDC-006': 4900,
+  'NGM-MDC-007': 4900,
 }
 
 function firstHeader(value) {

@@ -12,6 +12,16 @@ const PRODUCTS = {
     path: 'mundo-de-colores/Animales_de_la_Granja_para_Colorear_NGM-MDC-002.pdf',
     filename: 'Animales_de_la_Granja_para_Colorear_NGM-MDC-002.pdf',
   },
+  'NGM-MDC-006': {
+    price: 4900,
+    path: 'mundo-de-colores/Navidad_para_Colorear_NGM-MDC-006_optimizado.pdf',
+    filename: 'Navidad_para_Colorear_NGM-MDC-006_optimizado.pdf',
+  },
+  'NGM-MDC-007': {
+    price: 4900,
+    path: 'mundo-de-colores/Las_Estaciones_del_Ano_para_Colorear_NGM-MDC-007_optimizado.pdf',
+    filename: 'Las_Estaciones_del_Ano_para_Colorear_NGM-MDC-007_optimizado.pdf',
+  },
 }
 
 export default async function handler(req, res) {
