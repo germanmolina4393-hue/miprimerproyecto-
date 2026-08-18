@@ -84,10 +84,17 @@ export default async function handler(req, res) {
       console.error('Mercado Pago preference error', response.status, data?.message)
       return res.status(502).json({ error: 'Mercado Pago no pudo iniciar el cobro. Intentá nuevamente.' })
     }
-
+    if (!data.sandbox_init_point) {
+  console.error('Mercado Pago no devolvió sandbox_init_point', {
+    preferenceId: data.id,
+  })
+  return res.status(502).json({
+    error: 'La configuración de prueba no devolvió un checkout Sandbox.',
+  })
+}
     return res.status(200).json({
       preferenceId: data.id,
-    checkoutUrl: data.sandbox_init_point || data.init_point,
+    checkoutUrl: data.sandbox_init_point,
       orderId,
     })
   } catch (error) {
