@@ -49,7 +49,10 @@ export default async function handler(req, res) {
       quantity: 1,
       unit_price: product.price,
     }],
-    payer: { name, email },
+   payer: {
+  name,
+  email: process.env.MP_TEST_MODE === 'true' ? 'test@testuser.com' : email,
+},
     external_reference: orderId,
     metadata: {
       order_id: orderId,
