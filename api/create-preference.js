@@ -66,6 +66,7 @@ export default async function handler(req, res) {
       failure: `${origin}/pago-rechazado`,
     },
     auto_return: 'approved',
+    notification_url: `${origin}/api/mercadopago-webhook`,
   }
 
   try {
