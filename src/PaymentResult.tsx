@@ -42,7 +42,7 @@ export default function PaymentResult() {
         <p className="mt-6 text-xs font-bold uppercase tracking-wider text-gold">Mundo de Colores · NGM Studio</p>
         <h1 className="mt-2 font-serif text-4xl font-bold text-charcoal">{isApproved ? '¡Gracias por tu compra!' : 'Estado de tu pago'}</h1>
         <p className="mt-4 leading-relaxed text-charcoal/60">{message}</p>
-        {isApproved && paymentId && <a href={`/api/download-book?payment_id=${encodeURIComponent(paymentId)}`} className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 font-semibold text-parchment transition-colors hover:bg-gold"><Download size={18} /> Descargar mi libro en PDF</a>}
+       
         {!isChecking && !isApproved && <a href="/" className="mt-8 inline-flex rounded-full bg-charcoal px-6 py-3 text-sm font-semibold text-parchment transition-colors hover:bg-gold">Volver a la tienda</a>}
       </section>
     </main>
