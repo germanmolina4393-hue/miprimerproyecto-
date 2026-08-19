@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CheckCircle2, Download, LoaderCircle, TriangleAlert } from 'lucide-react'
+import { CheckCircle2, LoaderCircle, TriangleAlert } from 'lucide-react'
 
 type State = 'checking' | 'approved' | 'pending' | 'rejected' | 'error'
 
