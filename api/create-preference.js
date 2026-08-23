@@ -1,5 +1,11 @@
 const PRODUCTS = {
   'NGM-MDC-001': { title: 'Dinosaurios para Colorear', price: 4900 },
+  'NGM-MDC-002': { title: 'Animales de la Granja', price: 4900 },
+  'NGM-MDC-003': { title: 'Mundo Marino', price: 4900 },
+  'NGM-MDC-004': { title: 'Vehículos para Colorear', price: 4900 },
+  'NGM-MDC-005': { title: 'Unicornios para Colorear', price: 4900 },
+  'NGM-MDC-006': { title: 'Navidad para Colorear', price: 4900 },
+  'NGM-MDC-007': { title: 'Las Estaciones del Año', price: 4900 },
   // Solo se habilitan productos cuyo PDF final ya está listo para entregar.
 }
 
