@@ -45,19 +45,12 @@ function CategoryModal({ title, code, image, pages, price, description, badge, o
     setError('')
 
     try {
-      const response = await fetch('https://formspree.io/f/xykakpav', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          nombre: name,
-          email,
-          producto: `${title} – ${code}`,
-          importe: `$${price} ARS`,
-          _subject: `Intención de compra – ${code} – ${name}`,
-        }),
-      })
+       const continueToPayment = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setSending(true)
+    setError('')
 
-      if (!response.ok) throw new Error('No se pudo guardar el correo')
+    try {
       trackCheckout(title, price)
       await createCheckout({ name, email, productCode: code })
     } catch (checkoutError) {
