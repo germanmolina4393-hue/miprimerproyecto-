@@ -1,15 +1,22 @@
 const PRODUCTS = {
-  'NGM-MDC-001': { price: 4900, title: 'Dinosaurios para Colorear' },
-  'NGM-MDC-002': { price: 4900, title: 'Animales de la Granja' },
-  'NGM-MDC-003': { price: 4900, title: 'Mundo Marino' },
-  'NGM-MDC-004': { price: 4900, title: 'Vehículos para Colorear' },
-  'NGM-MDC-005': { price: 4900, title: 'Unicornios para Colorear' },
-  'NGM-MDC-006': { price: 4900, title: 'Navidad para Colorear' },
-  'NGM-MDC-007': { price: 4900, title: 'Las Estaciones del Año' },
+  'NGM-MDC-001': { title: 'Dinosaurios para Colorear' },
+  'NGM-MDC-002': { title: 'Animales de la Granja' },
+  'NGM-MDC-003': { title: 'Mundo Marino' },
+  'NGM-MDC-004': { title: 'Vehículos para Colorear' },
+  'NGM-MDC-005': { title: 'Unicornios para Colorear' },
+  'NGM-MDC-006': { title: 'Navidad para Colorear' },
+  'NGM-MDC-007': { title: 'Las Estaciones del Año' },
 }
+
+const PACKS = {
+  'PACK3': { title: 'Pack 3 Libros', price: 11900, count: 3 },
+  'FULL7': { title: 'Colección Completa', price: 24900, count: 7 },
+}
+
 function paymentIdFrom(req) {
   return String(req.query?.payment_id || req.query?.collection_id || '').trim()
 }
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET')
@@ -24,17 +31,34 @@ export default async function handler(req, res) {
     })
     const payment = await response.json()
     const productCode = payment.metadata?.product_code
-    const product = PRODUCTS[productCode]
+    const selectedCodes = String(payment.metadata?.selected_codes || '').split(',').filter(Boolean)
+    const pack = PACKS[productCode]
+    const singleProduct = PRODUCTS[productCode]
+
+    let expectedPrice = null
+    let items = []
+
+    if (pack) {
+      expectedPrice = pack.price
+      items = selectedCodes.filter(code => PRODUCTS[code]).map(code => ({ code, title: PRODUCTS[code].title }))
+    } else if (singleProduct) {
+      expectedPrice = 4900
+      items = [{ code: productCode, title: singleProduct.title }]
+    }
+
     const isApproved = response.ok
       && payment.status === 'approved'
-      && !!product
-      && Number(payment.transaction_amount) === product.price
+      && expectedPrice !== null
+      && items.length > 0
+      && Number(payment.transaction_amount) === expectedPrice
       && String(payment.external_reference || '').startsWith('MDC-')
+
     return res.status(200).json({
       approved: isApproved,
       status: payment.status || 'unknown',
-      product: isApproved ? product.title : undefined,
-      productCode: isApproved ? productCode : undefined,
+      product: isApproved && !pack ? items[0]?.title : undefined,
+      items: isApproved ? items : undefined,
+      isPack: isApproved ? !!pack : undefined,
     })
   } catch (error) {
     console.error('Payment verification error', error)
