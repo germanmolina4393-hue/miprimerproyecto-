@@ -6,6 +6,7 @@ export default function PaymentResult() {
   const paymentId = params.get('payment_id') || params.get('collection_id')
   const [state, setState] = useState<State>(paymentId ? 'checking' : 'error')
   const [message, setMessage] = useState(paymentId ? 'Estamos verificando tu pago con Mercado Pago…' : 'No encontramos el identificador del pago. Si se acreditó, escribinos y lo revisamos.')
+  const [productTitle, setProductTitle] = useState('')
   useEffect(() => {
     if (!paymentId) return
     fetch(`/api/verify-payment?payment_id=${encodeURIComponent(paymentId)}`)
@@ -15,6 +16,7 @@ export default function PaymentResult() {
         if (data.approved) {
           setState('approved')
           setMessage('¡Tu pago fue aprobado! Ya podés descargar tu libro.')
+          setProductTitle(data.product || '')
         } else if (data.status === 'pending' || data.status === 'in_process') {
           setState('pending')
           setMessage('Tu pago todavía está pendiente. Cuando Mercado Pago lo apruebe, volvé a abrir este enlace.')
@@ -37,7 +39,7 @@ export default function PaymentResult() {
         <p className="mt-6 text-xs font-bold uppercase tracking-wider text-gold">Mundo de Colores · NGM Studio</p>
         <h1 className="mt-2 font-serif text-4xl font-bold text-charcoal">{isApproved ? '¡Gracias por tu compra!' : 'Estado de tu pago'}</h1>
         <p className="mt-4 leading-relaxed text-charcoal/60">{message}</p>
-        {isApproved && paymentId && <a href={`/api/download-book?payment_id=${encodeURIComponent(paymentId)}`} className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 font-semibold text-parchment transition-colors hover:bg-gold"><Download size={18} /> Descargar mi libro en PDF</a>}
+        {isApproved && paymentId && <a href={`/api/download-book?payment_id=${encodeURIComponent(paymentId)}`} className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 font-semibold text-parchment transition-colors hover:bg-gold"><Download size={18} /> {productTitle ? `Descargar ${productTitle}` : 'Descargar mi libro en PDF'}</a>}
         {isApproved && <a href="/" className="mt-4 inline-flex w-full items-center justify-center rounded-full border border-charcoal/15 px-6 py-3.5 text-sm font-semibold text-charcoal transition-colors hover:bg-charcoal/5">Volver a la página principal</a>}
         {!isChecking && !isApproved && <a href="/" className="mt-8 inline-flex rounded-full bg-charcoal px-6 py-3 text-sm font-semibold text-parchment transition-colors hover:bg-gold">Volver a la tienda</a>}
       </section>
