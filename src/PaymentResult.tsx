@@ -1,17 +1,13 @@
 import { useEffect, useState } from 'react'
 import { CheckCircle2, Download, LoaderCircle, TriangleAlert } from 'lucide-react'
-
 type State = 'checking' | 'approved' | 'pending' | 'rejected' | 'error'
-
 export default function PaymentResult() {
   const params = new URLSearchParams(window.location.search)
   const paymentId = params.get('payment_id') || params.get('collection_id')
   const [state, setState] = useState<State>(paymentId ? 'checking' : 'error')
   const [message, setMessage] = useState(paymentId ? 'Estamos verificando tu pago con Mercado Pago…' : 'No encontramos el identificador del pago. Si se acreditó, escribinos y lo revisamos.')
-
   useEffect(() => {
     if (!paymentId) return
-
     fetch(`/api/verify-payment?payment_id=${encodeURIComponent(paymentId)}`)
       .then(async response => ({ response, data: await response.json() }))
       .then(({ response, data }) => {
@@ -32,7 +28,6 @@ export default function PaymentResult() {
         setMessage(error instanceof Error && error.message ? error.message : 'No pudimos verificar el pago. Intentá nuevamente en unos segundos.')
       })
   }, [paymentId])
-
   const isChecking = state === 'checking'
   const isApproved = state === 'approved'
   return (
@@ -43,6 +38,7 @@ export default function PaymentResult() {
         <h1 className="mt-2 font-serif text-4xl font-bold text-charcoal">{isApproved ? '¡Gracias por tu compra!' : 'Estado de tu pago'}</h1>
         <p className="mt-4 leading-relaxed text-charcoal/60">{message}</p>
         {isApproved && paymentId && <a href={`/api/download-book?payment_id=${encodeURIComponent(paymentId)}`} className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 font-semibold text-parchment transition-colors hover:bg-gold"><Download size={18} /> Descargar mi libro en PDF</a>}
+        {isApproved && <a href="/" className="mt-4 inline-flex w-full items-center justify-center rounded-full border border-charcoal/15 px-6 py-3.5 text-sm font-semibold text-charcoal transition-colors hover:bg-charcoal/5">Volver a la página principal</a>}
         {!isChecking && !isApproved && <a href="/" className="mt-8 inline-flex rounded-full bg-charcoal px-6 py-3 text-sm font-semibold text-parchment transition-colors hover:bg-gold">Volver a la tienda</a>}
       </section>
     </main>
