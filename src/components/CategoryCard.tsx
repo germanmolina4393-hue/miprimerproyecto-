@@ -45,12 +45,6 @@ function CategoryModal({ title, code, image, pages, price, description, badge, o
     setError('')
 
     try {
-       const continueToPayment = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setSending(true)
-    setError('')
-
-    try {
       trackCheckout(title, price)
       await createCheckout({ name, email, productCode: code })
     } catch (checkoutError) {
