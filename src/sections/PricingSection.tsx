@@ -1,6 +1,10 @@
+import { useState } from 'react'
 import { ArrowRight, Check, ShieldCheck } from 'lucide-react'
+import PackModal from '../components/PackModal'
 
 export default function PricingSection() {
+  const [showPackModal, setShowPackModal] = useState(false)
+
   return (
     <section id="comprar" className="bg-charcoal px-6 py-24">
       <div className="mx-auto max-w-4xl">
@@ -19,11 +23,14 @@ export default function PricingSection() {
                 <li key={item} className="flex gap-2"><Check size={18} className="shrink-0 text-sage" />{item}</li>
               ))}
             </ul>
-            <p className="mt-5 text-xs text-parchment/40">Después del pago, coordinamos por correo los tres títulos elegidos.</p>
-            <a href="https://mpago.la/242QJqb" target="_blank" rel="noopener noreferrer"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/20 px-6 py-4 text-sm font-semibold text-parchment transition-colors hover:bg-gold hover:text-charcoal">
-              Comprar con Mercado Pago <ArrowRight size={17} />
-            </a>
+            <p className="mt-5 text-xs text-parchment/40">Elegís los 3 libros antes de pagar. Después del pago, los descargás al instante.</p>
+            <button
+              type="button"
+              onClick={() => setShowPackModal(true)}
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/20 px-6 py-4 text-sm font-semibold text-parchment transition-colors hover:bg-gold hover:text-charcoal"
+            >
+              Elegir mis 3 libros <ArrowRight size={17} />
+            </button>
           </div>
 
           {/* Colección Completa */}
@@ -49,6 +56,7 @@ export default function PricingSection() {
           Pago seguro con Mercado Pago · Entrega por correo después de verificar el pago
         </p>
       </div>
+      {showPackModal && <PackModal onClose={() => setShowPackModal(false)} />}
     </section>
   )
 }
