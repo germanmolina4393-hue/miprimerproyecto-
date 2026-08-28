@@ -1,9 +1,72 @@
 import { useState } from 'react'
-import { ArrowRight, Check, ShieldCheck } from 'lucide-react'
+import type { FormEvent } from 'react'
+import { ArrowRight, Check, ShieldCheck, X, LoaderCircle } from 'lucide-react'
+import { createPortal } from 'react-dom'
 import PackModal from '../components/PackModal'
+import { createCheckout } from '../lib/checkout'
+
+function FullCollectionModal({ onClose }: { onClose: () => void }) {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [sending, setSending] = useState(false)
+  const [error, setError] = useState('')
+
+  const continueToPayment = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setSending(true)
+    setError('')
+    try {
+      await createCheckout({ name, email, productCode: 'FULL7' })
+    } catch (checkoutError) {
+      setError(checkoutError instanceof Error ? checkoutError.message : 'No pudimos iniciar el pago. Intentá nuevamente.')
+      setSending(false)
+    }
+  }
+
+  return createPortal(
+    <div className="fixed inset-0 z-[300] overflow-y-auto bg-charcoal/75 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="mx-auto my-5 w-full max-w-md overflow-hidden rounded-3xl bg-parchment shadow-2xl" onClick={event => event.stopPropagation()}>
+        <div className="relative p-6 sm:p-8">
+          <button type="button" onClick={onClose} className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-charcoal/10 transition-colors hover:bg-charcoal/20" aria-label="Cerrar">
+            <X size={18} />
+          </button>
+          <p className="pr-12 text-xs font-bold tracking-wide text-gold">COLECCIÓN COMPLETA</p>
+          <h3 className="mt-2 pr-12 font-serif text-3xl font-bold text-charcoal">Los 7 libros</h3>
+          <p className="mt-3 text-sm leading-relaxed text-charcoal/60">Recibís acceso a los 7 libros de Mundo de Colores en PDF, listos para descargar apenas se apruebe el pago.</p>
+
+          <div className="mt-5 flex items-end justify-between gap-4 border-t border-charcoal/10 pt-5">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/45">Colección Completa</p>
+              <p className="font-serif text-3xl font-bold text-charcoal">$24.900 <span className="text-sm font-normal text-charcoal/45">ARS</span></p>
+            </div>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold text-sage"><ShieldCheck size={15} /> Pago seguro</span>
+          </div>
+
+          <form className="mt-5" onSubmit={continueToPayment}>
+            <div className="grid gap-3">
+              <label className="text-xs font-semibold text-charcoal">Nombre y apellido
+                <input required value={name} onChange={event => setName(event.target.value)} className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-3 py-2.5 text-sm font-normal outline-none transition-colors focus:border-gold" placeholder="Tu nombre" />
+              </label>
+              <label className="text-xs font-semibold text-charcoal">Correo para recibir el PDF
+                <input required type="email" value={email} onChange={event => setEmail(event.target.value)} className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-3 py-2.5 text-sm font-normal outline-none transition-colors focus:border-gold" placeholder="tu@email.com" />
+              </label>
+            </div>
+            {error && <p className="mt-3 rounded-xl bg-coral/10 px-3 py-2.5 text-xs font-semibold text-coral" role="alert">{error}</p>}
+            <button type="submit" disabled={sending} className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-3.5 text-sm font-semibold text-parchment transition-colors hover:bg-gold disabled:cursor-not-allowed disabled:opacity-50">
+              {sending ? <><LoaderCircle size={16} className="animate-spin" /> Guardando tus datos…</> : <>Continuar a Mercado Pago <ArrowRight size={16} /></>}
+            </button>
+            <p className="mt-3 text-center text-xs text-charcoal/45">Usá este mismo correo en Mercado Pago para identificar tu compra.</p>
+          </form>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  )
+}
 
 export default function PricingSection() {
   const [showPackModal, setShowPackModal] = useState(false)
+  const [showFullModal, setShowFullModal] = useState(false)
 
   return (
     <section id="comprar" className="bg-charcoal px-6 py-24">
@@ -45,10 +108,13 @@ export default function PricingSection() {
               ))}
             </ul>
             <p className="mt-5 text-xs text-charcoal/50">Recibís los siete libros después de verificar el pago.</p>
-            <a href="https://mpago.la/1xJAgnk" target="_blank" rel="noopener noreferrer"
-              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 text-sm font-semibold text-parchment transition-colors hover:bg-charcoal/80">
+            <button
+              type="button"
+              onClick={() => setShowFullModal(true)}
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-4 text-sm font-semibold text-parchment transition-colors hover:bg-charcoal/80"
+            >
               Comprar con Mercado Pago <ArrowRight size={17} />
-            </a>
+            </button>
           </div>
         </div>
         <p className="mt-8 text-center text-xs text-parchment/40">
@@ -57,6 +123,7 @@ export default function PricingSection() {
         </p>
       </div>
       {showPackModal && <PackModal onClose={() => setShowPackModal(false)} />}
+      {showFullModal && <FullCollectionModal onClose={() => setShowFullModal(false)} />}
     </section>
   )
 }
