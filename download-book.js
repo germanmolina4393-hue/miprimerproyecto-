@@ -1,5 +1,6 @@
 import { Readable } from 'node:stream'
 import { get } from '@vercel/blob'
+import crypto from 'node:crypto'
 
 const PRODUCTS = {
   'NGM-MDC-001': {
@@ -24,6 +25,23 @@ const PRODUCTS = {
   },
 }
 
+function safeEqual(left, right) {
+  const leftBuffer = Buffer.from(left || '', 'utf8')
+  const rightBuffer = Buffer.from(right || '', 'utf8')
+  return leftBuffer.length === rightBuffer.length
+    && crypto.timingSafeEqual(leftBuffer, rightBuffer)
+}
+
+function validDownloadSignature(paymentId, expiresAt, signature, secret) {
+  const expiry = Number(expiresAt)
+  if (!paymentId || !Number.isSafeInteger(expiry) || expiry <= Math.floor(Date.now() / 1000)) return false
+  const expected = crypto
+    .createHmac('sha256', secret)
+    .update(`${paymentId}.${expiry}`)
+    .digest('base64url')
+  return safeEqual(expected, signature)
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
     res.setHeader('Allow', 'GET')
@@ -32,7 +50,13 @@ export default async function handler(req, res) {
 
   const paymentId = String(req.query?.payment_id || '').trim()
   const accessToken = process.env.MP_ACCESS_TOKEN
-  if (!paymentId || !accessToken) return res.status(400).json({ error: 'No pudimos identificar tu pago.' })
+  const deliveryLinkSecret = process.env.DELIVERY_LINK_SECRET
+  const expiresAt = String(req.query?.expires_at || '').trim()
+  const signature = String(req.query?.signature || '').trim()
+  if (!paymentId || !accessToken || !deliveryLinkSecret) return res.status(400).json({ error: 'No pudimos identificar tu pago.' })
+  if (!validDownloadSignature(paymentId, expiresAt, signature, deliveryLinkSecret)) {
+    return res.status(403).json({ error: 'Este enlace de descarga venció o no es válido.' })
+  }
 
   try {
     const paymentResponse = await fetch(`https://api.mercadopago.com/v1/payments/${encodeURIComponent(paymentId)}`, {

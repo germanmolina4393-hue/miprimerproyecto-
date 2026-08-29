@@ -107,7 +107,7 @@ export default async function handler(req, res) {
     }
     return res.status(200).json({
       preferenceId: data.id,
-      checkoutUrl: data.sandbox_init_point || data.init_point,
+     checkoutUrl: data.init_point,
       orderId,
     })
   } catch (error) {
