@@ -1,6 +1,5 @@
 import { Readable } from 'node:stream'
 import { get } from '@vercel/blob'
-import crypto from 'node:crypto'
 
 const PRODUCTS = {
   'NGM-MDC-001': { file: 'NGM-MDC-001-dinosaurios-para-colorear.pdf', name: 'Dinosaurios_para_Colorear_NGM-MDC-001.pdf' },
@@ -25,13 +24,7 @@ export default async function handler(req, res) {
   const paymentId = String(req.query?.payment_id || '').trim()
   const bookCode = String(req.query?.book_code || '').trim()
   const accessToken = process.env.MP_ACCESS_TOKEN
-  const deliveryLinkSecret = process.env.DELIVERY_LINK_SECRET
-  const expiresAt = String(req.query?.expires_at || '').trim()
-  const signature = String(req.query?.signature || '').trim()
-  if (!paymentId || !accessToken || !deliveryLinkSecret) return res.status(400).json({ error: 'No pudimos identificar tu pago.' })
-  if (!validDownloadSignature(paymentId, expiresAt, signature, deliveryLinkSecret)) {
-    return res.status(403).json({ error: 'Este enlace de descarga venció o no es válido.' })
-  }
+  if (!paymentId || !accessToken) return res.status(400).json({ error: 'No pudimos identificar tu pago.' })
 
   const product = PRODUCTS[bookCode]
   if (!product) return res.status(400).json({ error: 'Libro no reconocido.' })
