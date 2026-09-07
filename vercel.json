@@ -2,6 +2,7 @@
   "rewrites": [
     { "source": "/pago-aprobado", "destination": "/index.html" },
     { "source": "/pago-pendiente", "destination": "/index.html" },
-    { "source": "/pago-rechazado", "destination": "/index.html" }
+    { "source": "/pago-rechazado", "destination": "/index.html" },
+    { "source": "/coleccion-completa", "destination": "/index.html" }
   ]
 }
