@@ -1,18 +1,23 @@
-import { useEffect, useRef, useState } from 'react'
-import type { FormEvent } from 'react'
-import { createPortal } from 'react-dom'
+import { useEffect, useRef } from 'react'
 import {
-  ArrowRight, ShieldCheck, X, LoaderCircle, Mail, Printer,
+  ArrowRight, Check, ShieldCheck, Mail, Printer,
   CreditCard, ChevronDown, Sparkles,
 } from 'lucide-react'
+import { useState } from 'react'
 import { BOOKS } from '../books'
 import { BOOK_COVERS } from '../bookCovers'
-import { createCheckout } from '../lib/checkout'
 
 const UNIT_PRICE = 4900
+const PACK3_PRICE = 11900
 const BUNDLE_PRICE = 24900
 const TOTAL_PAGES = BOOKS.reduce((sum, book) => sum + book.pages, 0)
-const SAVINGS = UNIT_PRICE * BOOKS.length - BUNDLE_PRICE
+const PACK3_SAVINGS = UNIT_PRICE * 3 - PACK3_PRICE
+const BUNDLE_SAVINGS = UNIT_PRICE * BOOKS.length - BUNDLE_PRICE
+
+// Todas las compras se hacen en la tienda principal — esta página solo informa y deriva ahí.
+const STORE_URL = '/'
+const BUY_SECTION_URL = `${STORE_URL}#comprar`
+const BOOKS_SECTION_URL = `${STORE_URL}#categorias`
 
 function money(value: number) {
   return value.toLocaleString('es-AR')
@@ -20,68 +25,6 @@ function money(value: number) {
 
 function trackPixel(event: string) {
   if (typeof window !== 'undefined' && window.fbq) window.fbq('track', event)
-}
-
-// ---------- Modal de compra ----------
-function CheckoutModal({ onClose }: { onClose: () => void }) {
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [sending, setSending] = useState(false)
-  const [error, setError] = useState('')
-
-  const submit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    setSending(true)
-    setError('')
-    try {
-      await createCheckout({ name, email, productCode: 'FULL7' })
-    } catch (checkoutError) {
-      setError(checkoutError instanceof Error ? checkoutError.message : 'No pudimos iniciar el pago. Intentá nuevamente.')
-      setSending(false)
-    }
-  }
-
-  return createPortal(
-    <div className="fixed inset-0 z-[300] overflow-y-auto bg-charcoal/75 p-4 backdrop-blur-sm" onClick={onClose}>
-      <div className="mx-auto my-5 w-full max-w-md overflow-hidden rounded-3xl bg-parchment shadow-2xl" onClick={event => event.stopPropagation()}>
-        <div className="relative p-6 sm:p-8">
-          <button type="button" onClick={onClose} className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-charcoal/10 transition-colors hover:bg-charcoal/20" aria-label="Cerrar">
-            <X size={18} />
-          </button>
-          <p className="pr-12 text-xs font-bold tracking-wide text-gold">COLECCIÓN COMPLETA</p>
-          <h3 className="mt-2 pr-12 font-serif text-3xl font-bold text-charcoal">Los 7 libros</h3>
-          <p className="mt-3 text-sm leading-relaxed text-charcoal/60">
-            Te llegan los {BOOKS.length} PDF a tu correo apenas se apruebe el pago, listos para imprimir.
-          </p>
-
-          <div className="mt-5 flex items-end justify-between gap-4 border-t border-charcoal/10 pt-5">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/45">Colección Completa</p>
-              <p className="font-serif text-3xl font-bold text-charcoal">${money(BUNDLE_PRICE)} <span className="text-sm font-normal text-charcoal/45">ARS</span></p>
-            </div>
-            <span className="inline-flex items-center gap-1 text-xs font-semibold text-sage"><ShieldCheck size={15} /> Pago seguro</span>
-          </div>
-
-          <form className="mt-5" onSubmit={submit}>
-            <div className="grid gap-3">
-              <label className="text-xs font-semibold text-charcoal">Nombre y apellido
-                <input required value={name} onChange={event => setName(event.target.value)} className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-3 py-2.5 text-sm font-normal outline-none transition-colors focus:border-gold" placeholder="Tu nombre" />
-              </label>
-              <label className="text-xs font-semibold text-charcoal">Correo para recibir el PDF
-                <input required type="email" value={email} onChange={event => setEmail(event.target.value)} className="mt-2 w-full rounded-xl border border-charcoal/15 bg-white px-3 py-2.5 text-sm font-normal outline-none transition-colors focus:border-gold" placeholder="tu@email.com" />
-              </label>
-            </div>
-            {error && <p className="mt-3 rounded-xl bg-coral/10 px-3 py-2.5 text-xs font-semibold text-coral" role="alert">{error}</p>}
-            <button type="submit" disabled={sending} className="mt-4 flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-3.5 text-sm font-semibold text-parchment transition-colors hover:bg-gold disabled:cursor-not-allowed disabled:opacity-50">
-              {sending ? <><LoaderCircle size={16} className="animate-spin" /> Guardando tus datos…</> : <>Continuar a Mercado Pago <ArrowRight size={16} /></>}
-            </button>
-            <p className="mt-3 text-center text-xs text-charcoal/45">Usá este mismo correo en Mercado Pago para identificar tu compra.</p>
-          </form>
-        </div>
-      </div>
-    </div>,
-    document.body,
-  )
 }
 
 // ---------- Pila de portadas para el hero ----------
@@ -128,8 +71,8 @@ function CoverStack() {
 // ---------- FAQ ----------
 const FAQ_ITEMS = [
   {
-    q: '¿Cómo recibo los libros después de pagar?',
-    a: `Apenas Mercado Pago confirma el pago, te llega un correo con los ${BOOKS.length} PDF listos para descargar. Normalmente llega en minutos.`,
+    q: '¿Cómo compro y recibo los libros?',
+    a: 'Los botones de esta página te llevan a la tienda de Mundo de Colores, donde elegís tu opción y pagás con Mercado Pago. Apenas se confirma el pago, te llega un correo con los PDF listos para descargar.',
   },
   {
     q: '¿Necesito una impresora especial?',
@@ -178,9 +121,17 @@ function FaqAccordion() {
   )
 }
 
+// ---------- Botón que lleva a la tienda (sin Mercado Pago en esta página) ----------
+function StoreLink({ href, className, children }: { href: string; className: string; children: React.ReactNode }) {
+  return (
+    <a href={href} onClick={() => trackPixel('InitiateCheckout')} className={className}>
+      {children}
+    </a>
+  )
+}
+
 // ---------- Página principal ----------
 export default function ColeccionCompletaPage() {
-  const [showModal, setShowModal] = useState(false)
   const viewTracked = useRef(false)
 
   useEffect(() => {
@@ -188,11 +139,6 @@ export default function ColeccionCompletaPage() {
     viewTracked.current = true
     trackPixel('ViewContent')
   }, [])
-
-  const openCheckout = () => {
-    trackPixel('InitiateCheckout')
-    setShowModal(true)
-  }
 
   return (
     <div className="bg-parchment">
@@ -224,16 +170,12 @@ export default function ColeccionCompletaPage() {
       {/* Barra superior minimalista, enfocada en conversión */}
       <header className="sticky top-0 z-50 border-b border-gold/20 bg-parchment/90 backdrop-blur-sm">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <a href="/" className="font-serif text-lg font-bold text-charcoal/50 transition-colors hover:text-charcoal">
+          <a href={STORE_URL} className="font-serif text-lg font-bold text-charcoal/50 transition-colors hover:text-charcoal">
             ‹ Mundo de Colores
           </a>
-          <button
-            type="button"
-            onClick={openCheckout}
-            className="rounded-full bg-charcoal px-5 py-2.5 text-sm font-semibold text-parchment transition-colors hover:bg-gold"
-          >
-            Comprar ahora
-          </button>
+          <StoreLink href={BUY_SECTION_URL} className="rounded-full bg-charcoal px-5 py-2.5 text-sm font-semibold text-parchment transition-colors hover:bg-gold">
+            Ir a comprar
+          </StoreLink>
         </div>
       </header>
 
@@ -245,30 +187,23 @@ export default function ColeccionCompletaPage() {
         <div className="relative mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="text-center lg:text-left">
             <span className="inline-flex items-center gap-2 rounded-full bg-gold/15 px-4 py-1.5 text-xs font-bold tracking-wide text-gold">
-              <Sparkles size={14} /> Colección Completa · NGM Studio
+              <Sparkles size={14} /> NGM Studio
             </span>
             <h1 className="mt-5 font-serif text-4xl font-bold leading-tight text-charcoal sm:text-5xl lg:text-6xl">
               Siete libros para <span className="living-gradient">colorear, jugar y aprender</span>, sin pantallas de por medio
             </h1>
             <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-charcoal/60 lg:mx-0">
-              La Colección Completa de Mundo de Colores junta los {BOOKS.length} libros de NGM Studio en un solo pack:
-              {' '}{money(TOTAL_PAGES)} páginas en PDF, pensadas para chicos de 4 a 8 años y listas para imprimir en casa.
+              Mundo de Colores tiene {BOOKS.length} libros en PDF, pensados para chicos de 4 a 8 años y listos para
+              imprimir en casa. Los podés comprar sueltos, en pack de 3, o llevarte la colección completa.
             </p>
 
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row lg:justify-start">
-              <button
-                type="button"
-                onClick={openCheckout}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-8 py-4 text-base font-semibold text-parchment transition-colors hover:bg-gold sm:w-auto"
-              >
-                Quiero los 7 libros <ArrowRight size={18} />
-              </button>
-              <div className="text-center sm:text-left">
-                <p className="font-serif text-2xl font-bold text-charcoal">
-                  ${money(BUNDLE_PRICE)} <span className="text-sm font-normal text-charcoal/45">ARS · pago único</span>
-                </p>
-                <p className="text-xs text-charcoal/45 line-through">${money(UNIT_PRICE * BOOKS.length)} ARS comprados por separado</p>
-              </div>
+              <StoreLink href={BUY_SECTION_URL} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-8 py-4 text-base font-semibold text-parchment transition-colors hover:bg-gold sm:w-auto">
+                Ver precios y comprar <ArrowRight size={18} />
+              </StoreLink>
+              <p className="text-sm text-charcoal/50">
+                Desde ${money(UNIT_PRICE)} ARS por libro
+              </p>
             </div>
 
             <div className="mx-auto mt-8 flex max-w-md flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs font-medium text-charcoal/50 lg:mx-0 lg:justify-start">
@@ -323,35 +258,66 @@ export default function ColeccionCompletaPage() {
         </div>
       </section>
 
-      {/* VALOR / RECIBO */}
+      {/* LOS 3 PRECIOS */}
       <section className="bg-charcoal px-6 py-20">
-        <div className="mx-auto max-w-lg">
-          <div className="mb-10 text-center">
-            <h2 className="font-serif text-3xl font-bold text-parchment sm:text-4xl">Así se arma el ahorro</h2>
-            <p className="mt-3 text-parchment/60">Comprando la colección pagás menos que si llevaras los libros de a uno</p>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <h2 className="font-serif text-3xl font-bold text-parchment sm:text-4xl">Elegí cómo llevarte los libros</h2>
+            <p className="mt-3 text-parchment/60">Cuantos más libros lleves juntos, menos pagás por cada uno</p>
           </div>
 
-          <div className="rounded-3xl border border-dashed border-parchment/25 bg-white/5 p-8">
-            <div className="flex items-center justify-between text-sm text-parchment/70">
-              <span>{BOOKS.length} libros × ${money(UNIT_PRICE)}</span>
-              <span>${money(UNIT_PRICE * BOOKS.length)}</span>
+          <div className="grid gap-6 lg:grid-cols-3">
+            {/* Libro individual */}
+            <div className="rounded-3xl bg-white/10 p-8 text-parchment">
+              <p className="text-sm font-bold uppercase tracking-wider text-gold">Un libro</p>
+              <p className="mt-1 text-sm text-parchment/60">Elegís el que más te guste</p>
+              <p className="mt-4 font-serif text-4xl font-bold">${money(UNIT_PRICE)} <span className="text-base font-normal text-parchment/50">ARS</span></p>
+              <ul className="mt-6 grid gap-3 text-sm text-parchment/70">
+                {['1 libro completo en PDF', 'Formato A4 para imprimir', 'Ideal para probar la colección'].map(item => (
+                  <li key={item} className="flex gap-2"><Check size={18} className="shrink-0 text-sage" />{item}</li>
+                ))}
+              </ul>
+              <StoreLink href={BOOKS_SECTION_URL} className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/20 px-6 py-3.5 text-sm font-semibold text-parchment transition-colors hover:bg-gold hover:text-charcoal">
+                Elegir un libro <ArrowRight size={16} />
+              </StoreLink>
             </div>
-            <div className="mt-3 flex items-center justify-between text-sm text-sage">
-              <span>Descuento por colección completa</span>
-              <span>−${money(SAVINGS)}</span>
+
+            {/* Pack 3 */}
+            <div className="rounded-3xl bg-white/10 p-8 text-parchment">
+              <p className="text-sm font-bold uppercase tracking-wider text-gold">Pack 3 libros</p>
+              <p className="mt-1 text-sm text-parchment/60">Elegís tres aventuras del catálogo</p>
+              <p className="mt-4 font-serif text-4xl font-bold">${money(PACK3_PRICE)} <span className="text-base font-normal text-parchment/50">ARS</span></p>
+              <ul className="mt-6 grid gap-3 text-sm text-parchment/70">
+                {['3 libros completos en PDF', 'Formato A4 para imprimir', 'Elegís cualquier combinación', `Ahorrás $${money(PACK3_SAVINGS)}`].map(item => (
+                  <li key={item} className="flex gap-2"><Check size={18} className="shrink-0 text-sage" />{item}</li>
+                ))}
+              </ul>
+              <StoreLink href={BUY_SECTION_URL} className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-white/20 px-6 py-3.5 text-sm font-semibold text-parchment transition-colors hover:bg-gold hover:text-charcoal">
+                Elegir mis 3 libros <ArrowRight size={16} />
+              </StoreLink>
             </div>
-            <div className="mt-5 flex items-center justify-between border-t border-parchment/15 pt-5">
-              <span className="font-serif text-lg font-bold text-parchment">Total colección</span>
-              <span className="font-serif text-3xl font-bold text-parchment">${money(BUNDLE_PRICE)}</span>
+
+            {/* Colección completa */}
+            <div className="relative rounded-3xl bg-gold p-8 text-charcoal">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-sage px-4 py-1 text-xs font-bold text-white">Mejor precio por libro</span>
+              <p className="text-sm font-bold uppercase tracking-wider text-charcoal/60">Colección completa</p>
+              <p className="mt-1 text-sm text-charcoal/60">Los siete libros de Mundo de Colores</p>
+              <p className="mt-4 font-serif text-4xl font-bold">${money(BUNDLE_PRICE)} <span className="text-base font-normal text-charcoal/50">ARS</span></p>
+              <ul className="mt-6 grid gap-3 text-sm text-charcoal/70">
+                {['7 libros completos en PDF', `${money(TOTAL_PAGES)} páginas en total`, 'Formato A4 para imprimir', `Ahorrás $${money(BUNDLE_SAVINGS)}`].map(item => (
+                  <li key={item} className="flex gap-2"><Check size={18} className="shrink-0 text-charcoal/60" />{item}</li>
+                ))}
+              </ul>
+              <StoreLink href={BUY_SECTION_URL} className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-6 py-3.5 text-sm font-semibold text-parchment transition-colors hover:bg-charcoal/80">
+                Comprar la colección <ArrowRight size={16} />
+              </StoreLink>
             </div>
-            <button
-              type="button"
-              onClick={openCheckout}
-              className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gold px-6 py-4 text-sm font-semibold text-charcoal transition-colors hover:bg-parchment"
-            >
-              Comprar con Mercado Pago <ArrowRight size={17} />
-            </button>
           </div>
+
+          <p className="mt-8 text-center text-xs text-parchment/40">
+            <ShieldCheck size={14} className="inline mr-1" />
+            El pago se hace en la tienda de Mundo de Colores, con Mercado Pago
+          </p>
         </div>
       </section>
 
@@ -363,8 +329,8 @@ export default function ColeccionCompletaPage() {
           </div>
           <div className="grid gap-8 sm:grid-cols-3">
             {[
-              { icon: CreditCard, title: 'Pagás con Mercado Pago', text: 'Ingresás tu nombre y correo, y pagás de forma segura con cualquier medio disponible en Mercado Pago.' },
-              { icon: Mail, title: 'Te llegan los 7 PDF', text: 'En minutos recibís un correo con los siete libros listos para descargar.' },
+              { icon: CreditCard, title: 'Elegís y pagás en la tienda', text: 'Vas a la tienda de Mundo de Colores, elegís tu opción y pagás de forma segura con Mercado Pago.' },
+              { icon: Mail, title: 'Te llegan los PDF', text: 'En minutos recibís un correo con los libros listos para descargar.' },
               { icon: Printer, title: 'Imprimís y a colorear', text: 'Los imprimís en formato A4 las veces que quieras y arrancás la aventura.' },
             ].map((step, index) => (
               <div key={step.title} className="text-center">
@@ -392,19 +358,14 @@ export default function ColeccionCompletaPage() {
       <section className="px-6 py-24">
         <div className="mx-auto max-w-2xl rounded-3xl bg-gold/15 px-8 py-14 text-center">
           <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl">
-            Llevate los {BOOKS.length} libros por ${money(BUNDLE_PRICE)}
+            ¿Uno, tres o los siete? Vos elegís
           </h2>
           <p className="mx-auto mt-4 max-w-md text-charcoal/60">
-            Pago único, entrega inmediata por correo. Si tenés algún problema para descargar tus PDF, te ayudamos por
-            mail hasta resolverlo.
+            Entrá a la tienda de Mundo de Colores para ver las tres opciones y pagar de forma segura con Mercado Pago.
           </p>
-          <button
-            type="button"
-            onClick={openCheckout}
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-charcoal px-9 py-4 text-base font-semibold text-parchment transition-colors hover:bg-charcoal/85"
-          >
-            Comprar la Colección Completa <ArrowRight size={18} />
-          </button>
+          <StoreLink href={BUY_SECTION_URL} className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-charcoal px-9 py-4 text-base font-semibold text-parchment transition-colors hover:bg-charcoal/85">
+            Ir a la tienda <ArrowRight size={18} />
+          </StoreLink>
           <p className="mt-5 inline-flex items-center gap-1.5 text-xs font-semibold text-sage">
             <ShieldCheck size={15} /> Pago seguro con Mercado Pago
           </p>
@@ -415,8 +376,6 @@ export default function ColeccionCompletaPage() {
         <p className="font-serif text-lg living-gradient font-bold">Mundo de Colores</p>
         <p className="mt-2 text-xs text-parchment/40">© {new Date().getFullYear()} NGM Studio. Todos los derechos reservados.</p>
       </footer>
-
-      {showModal && <CheckoutModal onClose={() => setShowModal(false)} />}
     </div>
   )
 }
