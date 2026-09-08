@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import {
   ArrowRight, Check, ShieldCheck, Mail, Printer,
   CreditCard, ChevronDown, Sparkles,
+  Palette, Brain, Hand, BookOpen, Search, MonitorOff,
 } from 'lucide-react'
 import { useState } from 'react'
 import { BOOKS } from '../books'
@@ -67,6 +68,16 @@ function CoverStack() {
     </div>
   )
 }
+
+// ---------- Beneficios ----------
+const BENEFITS = [
+  { icon: Palette, title: 'Creatividad', text: 'Libertad para elegir colores, imaginar y crear su propia versión de cada aventura.' },
+  { icon: Brain, title: 'Concentración', text: 'Una actividad tranquila que invita a centrarse en cada página.' },
+  { icon: Hand, title: 'Motricidad fina', text: 'Colorear permite practicar movimientos precisos con las manos.' },
+  { icon: BookOpen, title: 'Aprendizaje', text: 'Cada temática abre la puerta a descubrir nuevos conceptos y curiosidades.' },
+  { icon: Search, title: 'Curiosidad', text: 'Diferentes mundos y personajes para despertar ganas de explorar.' },
+  { icon: MonitorOff, title: 'Tiempo sin pantallas', text: 'Una alternativa creativa para disfrutar de un momento diferente.' },
+]
 
 // ---------- FAQ ----------
 const FAQ_ITEMS = [
@@ -231,6 +242,27 @@ export default function ColeccionCompletaPage() {
         </div>
       </section>
 
+      {/* BENEFICIOS */}
+      <section className="px-6 pb-20">
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <h2 className="font-serif text-3xl font-bold text-charcoal sm:text-4xl">Mucho más que colorear</h2>
+            <p className="mt-3 text-charcoal/60">Mundo de Colores combina creatividad, juego y aprendizaje en cada página</p>
+          </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {BENEFITS.map(benefit => (
+              <div key={benefit.title} className="rounded-2xl border border-charcoal/10 bg-white/60 p-6">
+                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-gold/15 text-gold">
+                  <benefit.icon size={20} />
+                </div>
+                <h3 className="font-serif text-lg font-bold text-charcoal">{benefit.title}</h3>
+                <p className="mt-1.5 text-sm leading-relaxed text-charcoal/60">{benefit.text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* GALERÍA DE LOS 7 LIBROS */}
       <section className="bg-white/50 px-6 py-20">
         <div className="mx-auto max-w-6xl">
@@ -372,9 +404,34 @@ export default function ColeccionCompletaPage() {
         </div>
       </section>
 
-      <footer className="bg-charcoal px-6 py-8 text-center">
-        <p className="font-serif text-lg living-gradient font-bold">Mundo de Colores</p>
-        <p className="mt-2 text-xs text-parchment/40">© {new Date().getFullYear()} NGM Studio. Todos los derechos reservados.</p>
+      <footer className="bg-charcoal px-6 py-12">
+        <div className="mx-auto grid max-w-5xl gap-10 sm:grid-cols-3">
+          <div>
+            <p className="font-serif text-xl font-bold living-gradient">Mundo de Colores</p>
+            <p className="mt-3 max-w-xs text-sm leading-relaxed text-parchment/50">
+              Libros digitales para colorear que despiertan la imaginación de tus hijos.
+            </p>
+          </div>
+          <div>
+            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-parchment/70">Explorar</h4>
+            <ul className="grid gap-2 text-sm text-parchment/50">
+              <li><a href={BOOKS_SECTION_URL} className="transition-colors hover:text-parchment">Catálogo de libros</a></li>
+              <li><a href={BUY_SECTION_URL} className="transition-colors hover:text-parchment">Precios y packs</a></li>
+              <li><a href={`${STORE_URL}#como-funciona`} className="transition-colors hover:text-parchment">Cómo funciona</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="mb-3 text-sm font-semibold uppercase tracking-wide text-parchment/70">Legal</h4>
+            <ul className="grid gap-2 text-sm text-parchment/50">
+              <li><a href={`${STORE_URL}#contacto`} className="transition-colors hover:text-parchment">Contacto</a></li>
+              <li><a href="/privacidad" className="transition-colors hover:text-parchment">Política de privacidad</a></li>
+              <li><a href="/terminos" className="transition-colors hover:text-parchment">Términos y condiciones</a></li>
+            </ul>
+          </div>
+        </div>
+        <div className="mx-auto mt-8 max-w-5xl border-t border-parchment/10 pt-6 text-center text-xs text-parchment/30">
+          © {new Date().getFullYear()} NGM Studio. Todos los derechos reservados.
+        </div>
       </footer>
     </div>
   )
