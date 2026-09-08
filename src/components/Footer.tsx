@@ -21,11 +21,9 @@ export default function Footer() {
         <div>
           <h4 className="font-semibold text-sm mb-3 text-parchment/70 uppercase tracking-wide">Contacto</h4>
           <ul className="space-y-2 text-sm text-parchment/50">
-            {/* REEMPLAZÁ con tu número de WhatsApp */}
-            <li><a href="https://wa.me/549XXXXXXXXXX" target="_blank" rel="noopener" className="hover:text-parchment transition-colors">WhatsApp</a></li>
-            {/* REEMPLAZÁ con tu email */}
-            <li><a href="mailto:TU_EMAIL@gmail.com" className="hover:text-parchment transition-colors">TU_EMAIL@gmail.com</a></li>
-            <li><a href="#" className="hover:text-parchment transition-colors">Política de privacidad</a></li>
+            <li><a href="#contacto" className="hover:text-parchment transition-colors">Escribinos</a></li>
+            <li><a href="/privacidad" className="hover:text-parchment transition-colors">Política de privacidad</a></li>
+            <li><a href="/terminos" className="hover:text-parchment transition-colors">Términos y condiciones</a></li>
           </ul>
         </div>
       </div>
@@ -35,3 +33,4 @@ export default function Footer() {
     </footer>
   )
 }
+
