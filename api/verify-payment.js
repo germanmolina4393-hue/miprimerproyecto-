@@ -59,6 +59,8 @@ export default async function handler(req, res) {
       product: isApproved && !pack ? items[0]?.title : undefined,
       items: isApproved ? items : undefined,
       isPack: isApproved ? !!pack : undefined,
+      value: isApproved ? Number(payment.transaction_amount) : undefined,
+      currency: isApproved ? (payment.currency_id || 'ARS') : undefined,
     })
   } catch (error) {
     console.error('Payment verification error', error)
