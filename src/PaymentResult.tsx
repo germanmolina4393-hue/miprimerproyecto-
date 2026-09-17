@@ -19,6 +19,14 @@ export default function PaymentResult() {
         if (!response.ok) throw new Error(data.error)
         if (data.approved) {
           setState('approved')
+          if (typeof window !== 'undefined' && window.fbq) {
+            window.fbq('track', 'Purchase', {
+              value: data.value,
+              currency: data.currency || 'ARS',
+              content_ids: Array.isArray(data.items) ? data.items.map((item: Item) => item.code) : undefined,
+              content_type: 'product',
+            })
+          }
           const count = Array.isArray(data.items) ? data.items.length : 1
           if (count > 1) {
             setMessage('¡Tu pago fue aprobado! Ya podés descargar tus ' + count + ' libros.')
